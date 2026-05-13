@@ -1,4 +1,4 @@
-import svgPaths from "./svg-ci0qd6gy57";
+import svgPaths from "./svg-ci0qd6gy57.ts";
 import imgPetCompanionLogo from "./00e9533793b01d90c34b50db08b84853998152cb.png";
 import imgGoogle from "./74278594c1cfa9698502b9bedd64094874d20732.png";
 
