@@ -98,10 +98,15 @@ input {
   font-size: 14px;
 }
 
-.login span {
+.login-link {
   color: #7a5666;
   font-weight: 600;
   cursor: pointer;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
 }
 
 .footer {

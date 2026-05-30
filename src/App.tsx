@@ -1,5 +1,3 @@
-import Main from '../imports/Main/Main';
-
-export default function App() {
-  return <Main />;
-}
+// Routing i logika aplikacji jest w App.js — ten plik jest nieużywany.
+// index.js importuje './App' co rozwiązuje do App.js w pierwszej kolejności.
+export {};

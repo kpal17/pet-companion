@@ -95,13 +95,21 @@ const ActionCard = ({ icon, label }: { icon: IconName; label: string }) => (
   </div>
 );
 
+interface UpcomingItemProps {
+  image: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+  badgeType?: string;
+}
+
 const UpcomingItem = ({
   image,
   title,
   subtitle,
   badge,
   badgeType,
-}: any) => (
+}: UpcomingItemProps) => (
   <div className="upcoming">
     <img src={image} className="avatar" alt={title} />
     <div className="upcoming-text">

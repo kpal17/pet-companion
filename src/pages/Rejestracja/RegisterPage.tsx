@@ -1,8 +1,17 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import imgPetCompanionLogo from "./pet_companion_logo.png";
 import "./RegisterPage.css";
 
 const RegisterPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulate successful registration and redirect to login page
+    navigate("/logowanie");
+  };
+
   return (
     <div className="page">
       <div className="header">
@@ -17,12 +26,13 @@ const RegisterPage: React.FC = () => {
         </p>
       </div>
 
-      <form className="card">
+      <form className="card" onSubmit={handleSubmit}>
         <label>
           Imię i Nazwisko
           <input
             type="text"
             placeholder="Wpisz swoje imię i nazwisko"
+            required
           />
         </label>
 
@@ -31,17 +41,18 @@ const RegisterPage: React.FC = () => {
           <input
             type="email"
             placeholder="twój@email.com"
+            required
           />
         </label>
 
         <label>
           Hasło
-          <input type="password" placeholder="••••••••" />
+          <input type="password" placeholder="••••••••" required />
         </label>
 
         <label>
           Potwierdź hasło
-          <input type="password" placeholder="••••••••" />
+          <input type="password" placeholder="••••••••" required />
         </label>
 
         <button type="submit" className="primary-btn">
@@ -49,7 +60,7 @@ const RegisterPage: React.FC = () => {
         </button>
 
         <p className="login">
-          Masz już konto? <span>Zaloguj się</span>
+          Masz już konto? <Link to="/logowanie" className="login-link">Zaloguj się</Link>
         </p>
       </form>
 
