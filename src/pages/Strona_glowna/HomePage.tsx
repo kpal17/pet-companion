@@ -10,7 +10,7 @@ import { IconName } from "./assets/icons.ts";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { entries, pets } = useAuth();
+  const { entries, pets, currentUser } = useAuth();
   const [showAllUpcoming, setShowAllUpcoming] = useState(false);
 
   const today = new Date();
@@ -32,7 +32,7 @@ const HomePage: React.FC = () => {
     <div className="home">
       {/* HEADER */}
       <header className="header">
-        <h1>Cześć, Adam! 🐾</h1>
+        <h1>Cześć, {currentUser?.name || "Opiekunie"}! 🐾</h1>
       </header>
 
       {/* QUICK ACTIONS */}
