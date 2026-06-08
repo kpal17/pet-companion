@@ -346,6 +346,21 @@
   opacity: 0.75;
 }
 
+.login-footer-consent {
+  max-width: 360px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-subtle);
+  margin: 4px 0 0;
+}
+
+.login-footer-consent a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .login-footer-links {
   display: flex;
   gap: 16px;

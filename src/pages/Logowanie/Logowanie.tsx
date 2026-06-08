@@ -149,14 +149,19 @@ export default function Logowanie() {
               Zarejestruj się
             </Link>
           </p>
-          <div className="login-footer-links">
-            <a href="#privacy">Privacy</a>
-            <a href="#terms">Terms</a>
-            <a href="#support">Contact Support</a>
-          </div>
-          <p className="login-copyright">
-            © 2024 Pet Companion. Nurturing every paw.
+          <p className="login-footer-consent">
+            Tworząc konto akceptujesz{" "}
+            <a href="#terms">Regulamin</a> i{" "}
+            <a href="#privacy">Politykę prywatności</a>
           </p>
+          <p className="login-copyright">
+            © 2026 Pet Companion. Dbamy o każdą łapkę
+          </p>
+          <div className="login-footer-links">
+            <a href="#privacy">Prywatność</a>
+            <a href="#terms">Regulamin</a>
+            <a href="#support">Kontakt</a>
+          </div>
         </div>
       </div>
     </div>
