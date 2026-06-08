@@ -171,3 +171,28 @@
   color: #c8b0bc;
   font-weight: 300;
 }
+
+@media (max-width: 768px) {
+  .pets-content {
+    width: 100%;
+    max-width: 720px;
+    min-width: 0;
+  }
+
+  .pets-header {
+    padding-top: 28px;
+    border-radius: 0 0 28px 28px;
+  }
+}
+
+@media (max-width: 370px) {
+  .pets-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .pet-card {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}

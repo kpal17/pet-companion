@@ -114,3 +114,23 @@
 .submit-btn:hover {
   opacity: 0.9;
 }
+
+@media (max-width: 768px) {
+  .add-pet-header {
+    padding-top: 28px;
+    border-radius: 0 0 28px 28px;
+  }
+
+  .add-pet-form {
+    width: 100%;
+    max-width: 720px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 370px) {
+  .add-pet-form {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

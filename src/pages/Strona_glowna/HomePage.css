@@ -274,3 +274,32 @@ body {
   font-weight: 300;
   line-height: 1;
 }
+
+@media (max-width: 768px) {
+  .home {
+    width: 100%;
+    min-width: 0;
+    padding-bottom: 16px;
+  }
+
+  .header {
+    padding-top: 28px;
+    border-radius: 0 0 28px 28px;
+  }
+
+  .actions {
+    padding-bottom: 2px;
+  }
+}
+
+@media (max-width: 370px) {
+  .section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .about-banner {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+}
