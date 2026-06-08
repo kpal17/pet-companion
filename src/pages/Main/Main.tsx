@@ -160,35 +160,7 @@ function FeaturesSection() {
             }
           />
 
-          {/* 2 — Inteligentne przypomnienia */}
-          <FeatureCard
-            iconBg="white"
-            iconShadow
-            cardBg="rgba(248,200,220,0.2)"
-            icon={
-              <svg width="20" height="20" viewBox="0 0 20 20.05" fill="none">
-                <path d={svgPaths.p3f50100} fill="#795465" />
-              </svg>
-            }
-            title="Inteligentne przypomnienia"
-            description="Automatyczne powiadomienia o szczepieniach, comiesięcznych kuracjach przeciw pchłom i nadchodzących wizytach kontrolnych, dzięki czemu nigdy niczego nie przegapisz."
-          />
-
-          {/* 3 — Współpraca z weterynarzem */}
-          <FeatureCard
-            iconBg="white"
-            iconShadow
-            cardBg="rgba(118,146,255,0.1)"
-            icon={
-              <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
-                <path d={svgPaths.p2b729200} fill="#3856BF" />
-              </svg>
-            }
-            title="Współpraca z weterynarzem"
-            description="Błyskawicznie udostępniaj dokumentację weterynarzowi lub opiekunowi zwierząt. Przyznaj tymczasowy dostęp, aby zapewnić płynną opiekę, gdy Cię nie ma."
-          />
-
-          {/* 4 — Obsługa wielu zwierząt */}
+          {/* 2 — Obsługa wielu zwierząt */}
           <FeatureCard
             iconBg="rgba(246,209,118,0.15)"
             cardBg="rgba(246,209,118,0.1)"

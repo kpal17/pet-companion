@@ -85,6 +85,14 @@ const HomePage: React.FC = () => {
           />
         </div>
       </section>
+
+      <div className="about-banner" onClick={() => navigate("/main")}>
+        <div className="about-banner-text">
+          <strong>Poznaj Pet Companion</strong>
+          <span>Dowiedz się więcej o możliwościach aplikacji</span>
+        </div>
+        <span className="about-banner-arrow">›</span>
+      </div>
     </div>
   );
 };

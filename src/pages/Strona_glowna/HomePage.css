@@ -215,3 +215,46 @@ body {
   line-height: 1.5;
   margin: 0;
 }
+
+/* ── About banner ──────────────────────────────────────────────────────────── */
+
+.about-banner {
+  margin: 24px 20px 0;
+  background: linear-gradient(135deg, #7a5666 0%, #9b718a 100%);
+  border-radius: 20px;
+  padding: 20px 20px 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.about-banner:hover {
+  opacity: 0.92;
+}
+
+.about-banner-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: white;
+}
+
+.about-banner-text strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.about-banner-text span {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.about-banner-arrow {
+  font-size: 26px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  line-height: 1;
+}
