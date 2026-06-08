@@ -38,8 +38,8 @@ export default function PetProfilePage() {
   const infoRows = [
     { label: "Gatunek", value: pet.species },
     { label: "Rasa", value: pet.breed || "—" },
-    { label: "Wiek", value: computeAge(pet.birthDate) },
     { label: "Waga", value: pet.weight ? `${pet.weight} kg` : "—" },
+    { label: "Wiek", value: computeAge(pet.birthDate) },
   ];
 
   return (
