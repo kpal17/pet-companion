@@ -7,6 +7,7 @@ import HomePage from "./pages/Strona_glowna/HomePage.tsx";
 import AddPetPage from "./pages/Pupile/AddPetPage.tsx";
 import PetsListPage from "./pages/Pupile/PetsListPage.tsx";
 import PetProfilePage from "./pages/Pupile/PetProfilePage.tsx";
+import AddEntryPage from "./pages/Wpisy/AddEntryPage.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/pupile" element={<PetsListPage />} />
         <Route path="/pupile/dodaj" element={<AddPetPage />} />
         <Route path="/pupile/:id" element={<PetProfilePage />} />
+        <Route path="/wpisy/nowy" element={<AddEntryPage />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>

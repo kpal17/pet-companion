@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
 
 import { Icon } from "../../Icon.tsx";
-
-import leoImg from "./assets/pets/leo.png";
-import bozenaImg from "./assets/pets/bozena.png";
+import { useAuth } from "../../context/AuthContext.tsx";
+import { speciesEmoji, dateBadge } from "../Pupile/petUtils.ts";
 import { IconName } from "./assets/icons.ts";
 
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { entries, pets } = useAuth();
+  const [showAllUpcoming, setShowAllUpcoming] = useState(false);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const upcomingEntries = entries
+    .filter((e) => {
+      if (!e.date) return false;
+      const d = new Date(e.date);
+      d.setHours(0, 0, 0, 0);
+      return d >= today;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  const visibleUpcoming = showAllUpcoming ? upcomingEntries : upcomingEntries.slice(0, 2);
+  const hasMore = upcomingEntries.length > 2;
 
   return (
     <div className="home">
@@ -28,7 +44,7 @@ const HomePage: React.FC = () => {
         <div className="actions">
           <ActionCard icon="addIcon" label="Dodaj Pupila" onClick={() => navigate("/pupile/dodaj")} />
           <ActionCard icon="bookIcon" label="Moje pupile" onClick={() => navigate("/pupile")} />
-          <ActionCard icon="noteIcon" label="Nowy Wpis" />
+          <ActionCard icon="noteIcon" label="Nowy Wpis" onClick={() => navigate("/wpisy/nowy")} />
           <ActionCard icon="remindIcon" label="Przypomnij" />
         </div>
       </section>
@@ -37,23 +53,31 @@ const HomePage: React.FC = () => {
       <section className="section">
         <div className="section-header">
           <h2>Nadchodzące</h2>
-          <span className="link">Zobacz wszystkie</span>
+          {hasMore && (
+            <span className="link" onClick={() => setShowAllUpcoming((v) => !v)}>
+              {showAllUpcoming ? "Zwiń" : "Zobacz wszystkie"}
+            </span>
+          )}
         </div>
 
-        <UpcomingItem
-          image={leoImg}
-          title="Leo: Odrobaczanie"
-          subtitle="Podanie tabletki rano"
-          badge="jutro"
-          badgeType="urgent"
-        />
-
-        <UpcomingItem
-          image={bozenaImg}
-          title="Bożena: Szczepienie"
-          subtitle='Klinika "Zdrowy Kotuś"'
-          badge="za 3 dni"
-        />
+        {visibleUpcoming.length === 0 ? (
+          <p className="upcoming-empty">Brak nadchodzących wydarzeń</p>
+        ) : (
+          visibleUpcoming.map((entry) => {
+            const pet = pets.find((p) => p.id === entry.petId);
+            const { text: badge, urgent } = dateBadge(entry.date);
+            return (
+              <UpcomingItem
+                key={entry.id}
+                emoji={speciesEmoji(pet?.species ?? "")}
+                title={`${pet?.name ?? "Pupil"}: ${entry.category}`}
+                subtitle={entry.description}
+                badge={badge}
+                badgeType={urgent ? "urgent" : undefined}
+              />
+            );
+          })
+        )}
       </section>
 
       {/* ACTIVITY */}
@@ -66,7 +90,6 @@ const HomePage: React.FC = () => {
         <div className="activity">
           <ActivityItem
             icon="vetIcon"
-          
             title="Kontrola weterynaryjna"
             subtitle="Bożena • 2 godziny temu"
             text="Wszystkie wyniki w normie. Zalecana zmiana karmy na lepszą."
@@ -109,22 +132,20 @@ const ActionCard = ({ icon, label, onClick }: { icon: IconName; label: string; o
 );
 
 interface UpcomingItemProps {
-  image: string;
+  emoji?: string;
+  image?: string;
   title: string;
   subtitle: string;
   badge: string;
   badgeType?: string;
 }
 
-const UpcomingItem = ({
-  image,
-  title,
-  subtitle,
-  badge,
-  badgeType,
-}: UpcomingItemProps) => (
+const UpcomingItem = ({ emoji, image, title, subtitle, badge, badgeType }: UpcomingItemProps) => (
   <div className="upcoming">
-    <img src={image} className="avatar" alt={title} />
+    {image
+      ? <img src={image} className="avatar" alt={title} />
+      : <div className="avatar avatar-emoji">{emoji ?? "🐾"}</div>
+    }
     <div className="upcoming-text">
       <strong>{title}</strong>
       <p>{subtitle}</p>
