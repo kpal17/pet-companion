@@ -367,3 +367,5 @@
   color: var(--text-faint);
   margin: 0;
 }
+
+.login-error { color: #c0392b; font-size: 13px; text-align: center; margin: 0; }

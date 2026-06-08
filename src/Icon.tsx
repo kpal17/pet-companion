@@ -5,6 +5,8 @@ type IconProps = {
   size?: number;
   color?: string;
   viewBox?: string;
+  stroke?: boolean;
+  strokeWidth?: number;
 };
 
 export function Icon({
@@ -12,16 +14,15 @@ export function Icon({
   size = 24,
   color = "currentColor",
   viewBox = "0 0 20 20",
+  stroke = false,
+  strokeWidth = 1.5,
 }: IconProps) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox={viewBox}
-      fill={color}
-      aria-hidden
-    >
-      <path d={icons[name]} />
+    <svg width={size} height={size} viewBox={viewBox} fill={stroke ? "none" : color} aria-hidden>
+      <path
+        d={icons[name]}
+        {...(stroke ? { stroke: color, strokeWidth, strokeLinecap: "round" } : {})}
+      />
     </svg>
   );
 }

@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import imgPetCompanionLogo from "./pet_companion_logo.png";
 import "./RegisterPage.css";
+import { useAuth } from "../../context/AuthContext.tsx";
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate successful registration and redirect to login page
-    navigate("/logowanie");
+    register(name, email, password);
+    navigate("/home");
   };
 
   return (
@@ -32,6 +39,8 @@ const RegisterPage: React.FC = () => {
           <input
             type="text"
             placeholder="Wpisz swoje imię i nazwisko"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
         </label>
@@ -41,18 +50,32 @@ const RegisterPage: React.FC = () => {
           <input
             type="email"
             placeholder="twój@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </label>
 
         <label>
           Hasło
-          <input type="password" placeholder="••••••••" required />
+          <input
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </label>
 
         <label>
           Potwierdź hasło
-          <input type="password" placeholder="••••••••" required />
+          <input
+            type="password"
+            placeholder="••••••••"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
         </label>
 
         <button type="submit" className="primary-btn">
@@ -60,7 +83,10 @@ const RegisterPage: React.FC = () => {
         </button>
 
         <p className="login">
-          Masz już konto? <Link to="/logowanie" className="login-link">Zaloguj się</Link>
+          Masz już konto?{" "}
+          <Link to="/logowanie" className="login-link">
+            Zaloguj się
+          </Link>
         </p>
       </form>
 
