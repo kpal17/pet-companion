@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Main from "./pages/Main/Main.tsx";
 import Logowanie from "./pages/Logowanie/Logowanie.tsx";
-import RegisterPage from "./pages/Rejestracja/RegisterPage.tsx";
+import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/Strona_glowna/HomePage.tsx";
 import AddPetPage from "./pages/Pupile/AddPetPage.tsx";
 import PetsListPage from "./pages/Pupile/PetsListPage.tsx";
@@ -17,7 +17,7 @@ function App() {
         <Route path="/" element={<Navigate to="/logowanie" replace />} />
         <Route path="/main" element={<Main />} />
         <Route path="/logowanie" element={<Logowanie />} />
-        <Route path="/rejestracja" element={<RegisterPage />} />
+        <Route path="/rejestracja" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/pupile" element={<PetsListPage />} />
         <Route path="/pupile/dodaj" element={<AddPetPage />} />
