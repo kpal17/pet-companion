@@ -8,6 +8,8 @@ import AddPetPage from "./pages/Pupile/AddPetPage.tsx";
 import PetsListPage from "./pages/Pupile/PetsListPage.tsx";
 import PetProfilePage from "./pages/Pupile/PetProfilePage.tsx";
 import AddEntryPage from "./pages/Wpisy/AddEntryPage.tsx";
+import AppLayout from "./components/AppLayout.tsx";
+import AppSectionPage from "./pages/AppSectionPage.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 
 function App() {
@@ -19,11 +21,15 @@ function App() {
         <Route path="/main" element={<Main />} />
         <Route path="/logowanie" element={<Logowanie />} />
         <Route path="/rejestracja" element={<LoginPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/pupile" element={<PetsListPage />} />
-        <Route path="/pupile/dodaj" element={<AddPetPage />} />
-        <Route path="/pupile/:id" element={<PetProfilePage />} />
-        <Route path="/wpisy/nowy" element={<AddEntryPage />} />
+        <Route element={<AppLayout />}>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/pupile" element={<PetsListPage />} />
+          <Route path="/pupile/dodaj" element={<AddPetPage />} />
+          <Route path="/pupile/:id" element={<PetProfilePage />} />
+          <Route path="/wpisy/nowy" element={<AddEntryPage />} />
+          <Route path="/planer" element={<AppSectionPage type="planner" />} />
+          <Route path="/weterynarz" element={<AppSectionPage type="vet" />} />
+        </Route>
       </Routes>
     </BrowserRouter>
     </AuthProvider>

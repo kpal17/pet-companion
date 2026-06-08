@@ -1,0 +1,215 @@
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-shell__topbar,
+.app-shell__bottom-nav {
+  display: none;
+}
+
+.app-shell__content {
+  min-height: 100vh;
+}
+
+@media (min-width: 0) {
+  .app-shell {
+    min-height: 100dvh;
+    background: #f5eef2;
+  }
+
+  .app-shell__topbar {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    padding-top: env(safe-area-inset-top);
+    background: rgba(255, 250, 254, 0.96);
+    border-bottom: 1px solid rgba(233, 186, 205, 0.65);
+    box-shadow: 0 5px 18px rgba(215, 82, 151, 0.12);
+    backdrop-filter: blur(16px);
+  }
+
+  .app-shell__topbar-inner {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    height: 68px;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    align-items: center;
+    gap: 12px;
+    padding: 0 20px;
+  }
+
+  .app-shell__menu-wrap {
+    position: relative;
+  }
+
+  .app-shell__menu-button {
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+  }
+
+  .app-shell__menu-button span {
+    width: 24px;
+    height: 3px;
+    border-radius: 999px;
+    background: #e53f94;
+  }
+
+  .app-shell__brand {
+    min-width: 0;
+    color: #e53f94;
+    font-size: clamp(21px, 6.5vw, 28px);
+    font-weight: 700;
+    letter-spacing: -1.1px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .app-shell__avatar {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #7a5666, #ab7891);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(45, 34, 42, 0.28);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .app-shell__menu {
+    position: absolute;
+    top: 52px;
+    left: 0;
+    width: min(250px, calc(100vw - 40px));
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border: 1px solid rgba(233, 186, 205, 0.7);
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 16px 40px rgba(83, 52, 67, 0.18);
+  }
+
+  .app-shell__menu a,
+  .app-shell__menu button {
+    width: 100%;
+    padding: 11px 12px;
+    border: 0;
+    border-radius: 11px;
+    background: transparent;
+    color: #4f4448;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .app-shell__menu a:hover,
+  .app-shell__menu button:hover {
+    background: #fff1f7;
+    color: #d92c83;
+  }
+
+  .app-shell__content {
+    min-height: 100dvh;
+    padding-top: calc(68px + env(safe-area-inset-top));
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .app-shell__bottom-nav {
+    position: fixed;
+    z-index: 99;
+    left: 50%;
+    right: auto;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: min(calc(100% - 24px), 720px);
+    display: block;
+    border: 1px solid rgba(221, 217, 226, 0.9);
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 10px 30px rgba(43, 35, 50, 0.16);
+    backdrop-filter: blur(18px);
+    transform: translateX(-50%);
+  }
+
+  .app-shell__bottom-nav-inner {
+    min-height: 72px;
+    padding: 7px 8px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .app-shell__nav-item {
+    min-width: 0;
+    padding: 7px 4px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border-radius: 20px;
+    color: #9a99a4;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.1;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .app-shell__nav-item svg {
+    width: 25px;
+    height: 25px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .app-shell__nav-item:nth-child(2) svg {
+    fill: currentColor;
+    stroke: none;
+  }
+
+  .app-shell__nav-item--active {
+    background: #fff2f8;
+    color: #df2d86;
+  }
+}
+
+@media (max-width: 370px) {
+  .app-shell__topbar-inner {
+    padding: 0 14px;
+  }
+
+  .app-shell__brand {
+    font-size: 20px;
+  }
+
+  .app-shell__bottom-nav {
+    width: calc(100% - 16px);
+  }
+
+  .app-shell__nav-item {
+    font-size: 10px;
+  }
+}

@@ -218,3 +218,26 @@
   color: #8b8b9e;
   font-size: 15px;
 }
+
+@media (max-width: 768px) {
+  .profile-header {
+    padding-top: 28px;
+  }
+
+  .profile-content {
+    width: 100%;
+    max-width: 720px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 370px) {
+  .profile-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
