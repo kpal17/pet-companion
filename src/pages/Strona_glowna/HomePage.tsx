@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
 
 import { Icon } from "../../Icon.tsx";
@@ -9,6 +10,8 @@ import { IconName } from "./assets/icons.ts";
 
 
 const HomePage: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="home">
       {/* HEADER */}
@@ -22,9 +25,9 @@ const HomePage: React.FC = () => {
           <h2>Szybkie akcje</h2>
         </div>
 
-        <div className="actions">   
-
-          <ActionCard icon="addIcon" label="Dodaj Pupila" />
+        <div className="actions">
+          <ActionCard icon="addIcon" label="Dodaj Pupila" onClick={() => navigate("/pupile/dodaj")} />
+          <ActionCard icon="bookIcon" label="Moje pupile" onClick={() => navigate("/pupile")} />
           <ActionCard icon="noteIcon" label="Nowy Wpis" />
           <ActionCard icon="remindIcon" label="Przypomnij" />
         </div>
@@ -88,9 +91,11 @@ const HomePage: React.FC = () => {
 
 /* ---------- COMPONENTS ---------- */
 
-const ActionCard = ({ icon, label }: { icon: IconName; label: string }) => (
-  <div className="action-card">
-    <Icon name={icon} />
+const ActionCard = ({ icon, label, onClick }: { icon: IconName; label: string; onClick?: () => void }) => (
+  <div className="action-card" onClick={onClick}>
+    <div className="icon-wrap">
+      <Icon name={icon} size={22} color="#7a5666" />
+    </div>
     <span>{label}</span>
   </div>
 );
@@ -123,7 +128,7 @@ const UpcomingItem = ({
 const ActivityItem = ({ icon, title, subtitle, text }: { icon: IconName; title: string; subtitle: string; text: string }) => (
   <div className="activity-item">
     <div className="icon">
-      <Icon name={icon} />
+      <Icon name={icon} size={20} color="#7a5666" />
     </div>
     <div>
       <strong>{title}</strong>

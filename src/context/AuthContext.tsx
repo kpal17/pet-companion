@@ -6,11 +6,22 @@ type User = {
   password: string;
 };
 
+export type Pet = {
+  id: string;
+  name: string;
+  species: string;
+  breed: string;
+  birthDate: string;
+  weight: string;
+};
+
 type AuthContextType = {
   currentUser: User | null;
   register: (name: string, email: string, password: string) => void;
   login: (email: string, password: string) => boolean;
   logout: () => void;
+  pets: Pet[];
+  addPet: (pet: Omit<Pet, "id">) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -18,6 +29,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [pets, setPets] = useState<Pet[]>([]);
 
   const register = (name: string, email: string, password: string) => {
     const user = { name, email, password };
@@ -36,8 +48,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => setCurrentUser(null);
 
+  const addPet = (petData: Omit<Pet, "id">) => {
+    setPets((prev) => [...prev, { ...petData, id: String(Date.now()) }]);
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser, register, login, logout }}>
+    <AuthContext.Provider value={{ currentUser, register, login, logout, pets, addPet }}>
       {children}
     </AuthContext.Provider>
   );
