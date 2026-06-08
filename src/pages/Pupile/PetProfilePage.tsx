@@ -1,15 +1,27 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
-import { speciesEmoji, computeAge } from "./petUtils.ts";
+import { speciesEmoji, computeAge, dateBadge } from "./petUtils.ts";
 import "./PetProfilePage.css";
 
 export default function PetProfilePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { pets } = useAuth();
+  const { pets, entries } = useAuth();
 
   const pet = pets.find((p) => p.id === id);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const upcomingEntries = entries
+    .filter((e) => {
+      if (e.petId !== id || !e.date) return false;
+      const d = new Date(e.date);
+      d.setHours(0, 0, 0, 0);
+      return d >= today;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   if (!pet) {
     return (
@@ -68,10 +80,27 @@ export default function PetProfilePage() {
 
         <div className="section-card">
           <h3>Nadchodzące wizyty</h3>
-          <div className="empty-section">
-            <span>📅</span>
-            <p>Brak zaplanowanych wizyt</p>
-          </div>
+          {upcomingEntries.length === 0 ? (
+            <div className="empty-section">
+              <span>📅</span>
+              <p>Brak zaplanowanych wizyt</p>
+            </div>
+          ) : (
+            <div className="entries-list">
+              {upcomingEntries.map((entry) => {
+                const { text: badge, urgent } = dateBadge(entry.date);
+                return (
+                  <div key={entry.id} className="entry-row">
+                    <div className="entry-info">
+                      <strong>{entry.category}</strong>
+                      {entry.description && <p>{entry.description}</p>}
+                    </div>
+                    <span className={`entry-badge ${urgent ? "urgent" : ""}`}>{badge}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>
