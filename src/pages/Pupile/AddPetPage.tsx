@@ -23,9 +23,6 @@ export default function AddPetPage() {
   return (
     <div className="add-pet-page">
       <div className="add-pet-header">
-        <button className="back-btn" onClick={() => navigate("/pupile")} aria-label="Wróć">
-          ←
-        </button>
         <h1>Nowy pupil</h1>
       </div>
 

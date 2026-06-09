@@ -11,9 +11,6 @@ export default function PetsListPage() {
   return (
     <div className="pets-list-page">
       <div className="pets-header">
-        <button className="back-btn" onClick={() => navigate("/home")} aria-label="Wróć">
-          ←
-        </button>
         <h1>Moje pupile</h1>
         <button className="add-btn" onClick={() => navigate("/pupile/dodaj")} aria-label="Dodaj pupila">
           +

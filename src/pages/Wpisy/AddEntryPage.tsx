@@ -35,7 +35,6 @@ export default function AddEntryPage() {
     return (
       <div className="add-entry-page">
         <div className="add-entry-header">
-          <button className="back-btn" onClick={() => navigate("/home")} aria-label="Wróć">←</button>
           <h1>Nowy wpis</h1>
         </div>
         <div className="no-pets">
@@ -52,7 +51,6 @@ export default function AddEntryPage() {
   return (
     <div className="add-entry-page">
       <div className="add-entry-header">
-        <button className="back-btn" onClick={() => navigate("/home")} aria-label="Wróć">←</button>
         <h1>Nowy wpis</h1>
       </div>
 
