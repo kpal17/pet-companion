@@ -140,6 +140,190 @@
   box-shadow: 0 2px 10px rgba(122, 86, 102, 0.09);
 }
 
+.health-record {
+  padding: 20px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(122, 86, 102, 0.09);
+}
+
+.health-record-heading,
+.profile-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.health-record-heading span,
+.profile-section-heading span {
+  display: block;
+  margin-bottom: 2px;
+  color: #a38f99;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.health-record-heading h3,
+.profile-section-heading h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.health-record-heading button,
+.profile-section-heading button {
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: #ffe5f1;
+  color: #d52e80;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.health-record-list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.health-record-item {
+  padding: 13px;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 12px;
+  border-radius: 16px;
+  background: #f8f5fb;
+}
+
+.health-record-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #fce8f1;
+  font-size: 21px;
+}
+
+.health-record-icon-visit { background: #eaf0ff; }
+.health-record-icon-medication { background: #fff4d8; }
+.health-record-icon-vaccination { background: #e6f7ed; }
+
+.health-record-body {
+  min-width: 0;
+}
+
+.health-record-body > span {
+  display: block;
+  color: #9d9097;
+  font-size: 10px;
+}
+
+.health-record-body > strong {
+  display: block;
+  margin: 2px 0 5px;
+  color: #26202b;
+  font-size: 14px;
+}
+
+.health-record-body p {
+  margin: 3px 0 0;
+  color: #776b71;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.profile-section-heading {
+  margin-bottom: 12px;
+}
+
+.sharing-description {
+  margin: 0 0 13px;
+  color: #81747a;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.sharing-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.sharing-form input,
+.sharing-form select {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #eadde4;
+  border-radius: 11px;
+  background: #fbf8fa;
+  font: inherit;
+  font-size: 11px;
+}
+
+.sharing-form select {
+  grid-column: 1;
+}
+
+.sharing-form button {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 12px;
+  background: #7a5666;
+  color: #fff;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.sharing-list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.sharing-list > div {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-radius: 12px;
+  background: #f8f5f7;
+}
+
+.sharing-list span,
+.sharing-list strong {
+  display: block;
+}
+
+.sharing-list strong {
+  margin-bottom: 2px;
+  color: #443941;
+  font-size: 11px;
+}
+
+.sharing-list span {
+  color: #978990;
+  font-size: 9px;
+}
+
+.sharing-list button {
+  border: 0;
+  background: transparent;
+  color: #c33a72;
+  font-size: 10px;
+  font-weight: 700;
+}
+
 .empty-section {
   display: flex;
   flex-direction: column;
@@ -239,5 +423,16 @@
 
   .info-grid {
     grid-template-columns: 1fr;
+  }
+
+  .sharing-form {
+    grid-template-columns: 1fr;
+  }
+
+  .sharing-form button,
+  .sharing-form select {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 40px;
   }
 }

@@ -10,6 +10,7 @@ import PetProfilePage from "./pages/Pupile/PetProfilePage.tsx";
 import AddEntryPage from "./pages/Wpisy/AddEntryPage.tsx";
 import AppLayout from "./components/AppLayout.tsx";
 import AppSectionPage from "./pages/AppSectionPage.tsx";
+import PlannerPage from "./pages/PlannerPage.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
           <Route path="/pupile/dodaj" element={<AddPetPage />} />
           <Route path="/pupile/:id" element={<PetProfilePage />} />
           <Route path="/wpisy/nowy" element={<AddEntryPage />} />
-          <Route path="/planer" element={<AppSectionPage type="planner" />} />
+          <Route path="/planer" element={<PlannerPage />} />
           <Route path="/weterynarz" element={<AppSectionPage type="vet" />} />
         </Route>
       </Routes>

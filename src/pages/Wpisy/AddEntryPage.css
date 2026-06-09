@@ -65,6 +65,11 @@
   color: #1a1a2e;
 }
 
+.form-field small {
+  color: #92848b;
+  font-size: 10px;
+}
+
 .form-field input,
 .form-field select,
 .form-field textarea {

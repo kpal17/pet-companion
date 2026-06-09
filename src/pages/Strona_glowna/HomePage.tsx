@@ -7,23 +7,40 @@ import { useAuth } from "../../context/AuthContext.tsx";
 import { speciesEmoji, dateBadge } from "../Pupile/petUtils.ts";
 import { IconName } from "./assets/icons.ts";
 
+function nextReminderDate(date: string, recurrence: string) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let occurrence = new Date(`${date}T12:00:00`);
+
+  if (recurrence === "none") return occurrence >= today ? occurrence : null;
+
+  for (let index = 0; index < 1500 && occurrence < today; index += 1) {
+    const next = new Date(occurrence);
+    if (recurrence === "daily") next.setDate(next.getDate() + 1);
+    if (recurrence === "weekly") next.setDate(next.getDate() + 7);
+    if (recurrence === "monthly") next.setMonth(next.getMonth() + 1);
+    if (recurrence === "quarterly") next.setMonth(next.getMonth() + 3);
+    if (recurrence === "yearly") next.setFullYear(next.getFullYear() + 1);
+    occurrence = next;
+  }
+
+  return occurrence >= today ? occurrence : null;
+}
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { entries, pets, currentUser } = useAuth();
+  const { pets, currentUser, reminders } = useAuth();
   const [showAllUpcoming, setShowAllUpcoming] = useState(false);
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const upcomingEntries = entries
-    .filter((e) => {
-      if (!e.date) return false;
-      const d = new Date(e.date);
-      d.setHours(0, 0, 0, 0);
-      return d >= today;
-    })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const upcomingEntries = reminders
+    .map((reminder) => ({
+      reminder,
+      occurrence: nextReminderDate(reminder.date, reminder.recurrence),
+    }))
+    .filter(
+      (item): item is typeof item & { occurrence: Date } => item.occurrence !== null,
+    )
+    .sort((a, b) => a.occurrence.getTime() - b.occurrence.getTime());
 
   const visibleUpcoming = showAllUpcoming ? upcomingEntries : upcomingEntries.slice(0, 2);
   const hasMore = upcomingEntries.length > 2;
@@ -45,7 +62,7 @@ const HomePage: React.FC = () => {
           <ActionCard icon="addIcon" label="Dodaj Pupila" onClick={() => navigate("/pupile/dodaj")} />
           <ActionCard icon="bookIcon" label="Moje pupile" onClick={() => navigate("/pupile")} />
           <ActionCard icon="noteIcon" label="Nowy Wpis" onClick={() => navigate("/wpisy/nowy")} />
-          <ActionCard icon="remindIcon" label="Przypomnij" />
+          <ActionCard icon="remindIcon" label="Przypomnij" onClick={() => navigate("/planer")} />
         </div>
       </section>
 
@@ -63,15 +80,16 @@ const HomePage: React.FC = () => {
         {visibleUpcoming.length === 0 ? (
           <p className="upcoming-empty">Brak nadchodzących wydarzeń</p>
         ) : (
-          visibleUpcoming.map((entry) => {
-            const pet = pets.find((p) => p.id === entry.petId);
-            const { text: badge, urgent } = dateBadge(entry.date);
+          visibleUpcoming.map(({ reminder, occurrence }) => {
+            const pet = pets.find((p) => p.id === reminder.petId);
+            const occurrenceDate = occurrence.toISOString().split("T")[0];
+            const { text: badge, urgent } = dateBadge(occurrenceDate);
             return (
               <UpcomingItem
-                key={entry.id}
+                key={reminder.id}
                 emoji={speciesEmoji(pet?.species ?? "")}
-                title={`${pet?.name ?? "Pupil"}: ${entry.category}`}
-                subtitle={entry.description}
+                title={`${pet?.name ?? "Pupil"}: ${reminder.title}`}
+                subtitle={`${reminder.time}${reminder.notes ? ` · ${reminder.notes}` : ""}`}
                 badge={badge}
                 badgeType={urgent ? "urgent" : undefined}
               />

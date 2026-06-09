@@ -1,34 +1,55 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext.tsx";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth, type Entry } from "../../context/AuthContext.tsx";
 import { speciesEmoji } from "../Pupile/petUtils.ts";
 import "./AddEntryPage.css";
 
-const CATEGORIES = [
-  "Odrobaczanie",
-  "Szczepienie",
-  "Wizyta kontrolna",
-  "Podanie leku",
-  "Pomiar wagi",
-  "Pielęgnacja",
-  "Inne",
+const RECORD_TYPES: Array<{ value: Entry["recordType"]; label: string }> = [
+  { value: "vaccination", label: "Szczepienie" },
+  { value: "visit", label: "Wizyta weterynaryjna" },
+  { value: "medication", label: "Lek lub kuracja" },
+  { value: "measurement", label: "Pomiar / badanie" },
+  { value: "other", label: "Inny wpis" },
 ];
 
 export default function AddEntryPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { pets, addEntry } = useAuth();
 
-  const [petId, setPetId] = useState(pets[0]?.id ?? "");
-  const [category, setCategory] = useState(CATEGORIES[0]);
+  const requestedPetId = searchParams.get("pet");
+  const [petId, setPetId] = useState(
+    pets.some((pet) => pet.id === requestedPetId) ? requestedPetId || "" : pets[0]?.id ?? "",
+  );
+  const [recordType, setRecordType] = useState<Entry["recordType"]>("visit");
+  const [category, setCategory] = useState("Wizyta kontrolna");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
+  const [doctor, setDoctor] = useState("");
+  const [diagnosis, setDiagnosis] = useState("");
+  const [recommendations, setRecommendations] = useState("");
+  const [medicationName, setMedicationName] = useState("");
+  const [dosage, setDosage] = useState("");
+  const [nextDate, setNextDate] = useState("");
 
   const today = new Date().toISOString().split("T")[0];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addEntry({ petId, category, description, date });
-    navigate("/home");
+    addEntry({
+      petId,
+      category,
+      description,
+      date,
+      recordType,
+      doctor,
+      diagnosis,
+      recommendations,
+      medicationName,
+      dosage,
+      nextDate,
+    });
+    navigate(`/pupile/${petId}`);
   };
 
   if (pets.length === 0) {
@@ -71,28 +92,109 @@ export default function AddEntryPage() {
         </div>
 
         <div className="form-field">
-          <label htmlFor="entry-category">Kategoria</label>
+          <label htmlFor="entry-type">Rodzaj wpisu</label>
           <select
-            id="entry-category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            id="entry-type"
+            value={recordType}
+            onChange={(e) => setRecordType(e.target.value as Entry["recordType"])}
           >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
+            {RECORD_TYPES.map((item) => (
+              <option key={item.value} value={item.value}>{item.label}</option>
             ))}
           </select>
         </div>
 
         <div className="form-field">
-          <label htmlFor="entry-desc">Opis</label>
+          <label htmlFor="entry-category">Nazwa wpisu</label>
+          <input
+            id="entry-category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="np. Kontrola uszu"
+            required
+          />
+        </div>
+
+        {recordType === "visit" && (
+          <>
+            <div className="form-field">
+              <label htmlFor="entry-doctor">Lekarz / lecznica</label>
+              <input
+                id="entry-doctor"
+                value={doctor}
+                onChange={(e) => setDoctor(e.target.value)}
+                placeholder="np. lek. Anna Kowalska, Artemis"
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="entry-diagnosis">Diagnoza</label>
+              <input
+                id="entry-diagnosis"
+                value={diagnosis}
+                onChange={(e) => setDiagnosis(e.target.value)}
+                placeholder="Rozpoznanie po wizycie"
+              />
+            </div>
+          </>
+        )}
+
+        {recordType === "medication" && (
+          <>
+            <div className="form-field">
+              <label htmlFor="entry-medication">Nazwa leku</label>
+              <input
+                id="entry-medication"
+                value={medicationName}
+                onChange={(e) => setMedicationName(e.target.value)}
+                placeholder="np. Bravecto"
+                required
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="entry-dosage">Dawkowanie</label>
+              <input
+                id="entry-dosage"
+                value={dosage}
+                onChange={(e) => setDosage(e.target.value)}
+                placeholder="np. 1 tabletka co 3 miesiące"
+              />
+            </div>
+          </>
+        )}
+
+        <div className="form-field">
+          <label htmlFor="entry-desc">Opis / preparat / wynik</label>
           <textarea
             id="entry-desc"
-            placeholder="np. Podanie tabletki rano"
+            placeholder="Najważniejsze informacje o wpisie"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
             rows={3}
           />
+        </div>
+
+        <div className="form-field">
+          <label htmlFor="entry-recommendations">Zalecenia</label>
+          <textarea
+            id="entry-recommendations"
+            placeholder="Zalecenia lekarza lub dalsze kroki"
+            value={recommendations}
+            onChange={(e) => setRecommendations(e.target.value)}
+            rows={2}
+          />
+        </div>
+
+        <div className="form-field">
+          <label htmlFor="entry-next-date">Kolejny termin (opcjonalnie)</label>
+          <input
+            id="entry-next-date"
+            type="date"
+            value={nextDate}
+            min={date || today}
+            onChange={(e) => setNextDate(e.target.value)}
+          />
+          <small>Utworzy przypomnienie w planerze dla tego pupila.</small>
         </div>
 
         <div className="form-field">
