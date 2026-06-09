@@ -1,12 +1,11 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
 import { speciesEmoji, computeAge, dateBadge } from "./petUtils.ts";
 import "./PetProfilePage.css";
 
 export default function PetProfilePage() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { pets, entries } = useAuth();
 
   const pet = pets.find((p) => p.id === id);
@@ -27,7 +26,6 @@ export default function PetProfilePage() {
     return (
       <div className="pet-profile-page">
         <div className="profile-header">
-          <button className="back-btn" onClick={() => navigate("/pupile")}>←</button>
           <h1>Profil pupila</h1>
         </div>
         <div className="not-found">Nie znaleziono pupila.</div>
@@ -45,9 +43,6 @@ export default function PetProfilePage() {
   return (
     <div className="pet-profile-page">
       <div className="profile-header">
-        <button className="back-btn" onClick={() => navigate("/pupile")} aria-label="Wróć">
-          ←
-        </button>
         <h1>{pet.name}</h1>
       </div>
 

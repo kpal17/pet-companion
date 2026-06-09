@@ -74,11 +74,12 @@ function AppNavigationIcon({ name }: { name: NavigationIcon }) {
 }
 
 export default function AppLayout() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, entries, logout, pets } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const menuRef = useRef<HTMLDivElement>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const canGoBack = location.pathname !== "/home";
 
   const initials = (currentUser?.name || "Opiekun")
     .split(/\s+/)
@@ -88,19 +89,43 @@ export default function AppLayout() {
     .join("");
 
   useEffect(() => {
-    setMenuOpen(false);
+    setProfileOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
-    const closeMenu = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
+    const closeProfile = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setProfileOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", closeMenu);
-    return () => document.removeEventListener("mousedown", closeMenu);
+    const closeProfileWithKeyboard = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", closeProfile);
+    document.addEventListener("keydown", closeProfileWithKeyboard);
+    return () => {
+      document.removeEventListener("mousedown", closeProfile);
+      document.removeEventListener("keydown", closeProfileWithKeyboard);
+    };
   }, []);
+
+  const handleBack = () => {
+    if (location.pathname.startsWith("/pupile/")) {
+      navigate("/pupile");
+      return;
+    }
+
+    if (location.pathname.startsWith("/wpisy")) {
+      navigate("/planer");
+      return;
+    }
+
+    navigate("/home");
+  };
 
   const handleLogout = () => {
     logout();
@@ -111,36 +136,79 @@ export default function AppLayout() {
     <div className="app-shell">
       <header className="app-shell__topbar">
         <div className="app-shell__topbar-inner">
-          <div className="app-shell__menu-wrap" ref={menuRef}>
+          {canGoBack ? (
             <button
               type="button"
-              className="app-shell__menu-button"
-              onClick={() => setMenuOpen((open) => !open)}
-              aria-label="Otwórz menu"
-              aria-expanded={menuOpen}
+              className="app-shell__back-button"
+              onClick={handleBack}
+              aria-label="Wróć"
             >
-              <span />
-              <span />
-              <span />
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
             </button>
-
-            {menuOpen && (
-              <div className="app-shell__menu">
-                <NavLink to="/home">Strona główna</NavLink>
-                <NavLink to="/pupile">Moje pupile</NavLink>
-                <NavLink to="/pupile/dodaj">Dodaj pupila</NavLink>
-                <NavLink to="/wpisy/nowy">Dodaj wpis</NavLink>
-                <button type="button" onClick={handleLogout}>Wyloguj się</button>
-              </div>
-            )}
-          </div>
+          ) : (
+            <span className="app-shell__topbar-spacer" aria-hidden="true" />
+          )}
 
           <NavLink className="app-shell__brand" to="/home">
             Pet Companion
           </NavLink>
 
-          <div className="app-shell__avatar" title={currentUser?.name || "Profil użytkownika"}>
-            {initials || "PC"}
+          <div className="app-shell__profile-wrap" ref={profileRef}>
+            <button
+              type="button"
+              className="app-shell__avatar"
+              title={currentUser?.name || "Profil użytkownika"}
+              aria-label="Otwórz profil"
+              aria-expanded={profileOpen}
+              aria-controls="app-profile-menu"
+              onClick={() => setProfileOpen((open) => !open)}
+            >
+              {initials || "PC"}
+            </button>
+
+            {profileOpen && (
+              <div className="app-shell__profile-menu" id="app-profile-menu">
+                <div className="app-shell__profile-summary">
+                  <div className="app-shell__profile-avatar">{initials || "PC"}</div>
+                  <div>
+                    <strong>{currentUser?.name || "Opiekun"}</strong>
+                    <span>{currentUser?.email || "Twoje konto"}</span>
+                  </div>
+                </div>
+
+                <div className="app-shell__profile-stats" aria-label="Podsumowanie konta">
+                  <div>
+                    <strong>{pets.length}</strong>
+                    <span>Pupile</span>
+                  </div>
+                  <div>
+                    <strong>{entries.length}</strong>
+                    <span>Wpisy</span>
+                  </div>
+                </div>
+
+                <div className="app-shell__profile-actions">
+                  <NavLink to="/pupile">
+                    <span>Moje pupile</span>
+                    <span aria-hidden="true">›</span>
+                  </NavLink>
+                  <NavLink to="/wpisy/nowy">
+                    <span>Dodaj nowy wpis</span>
+                    <span aria-hidden="true">›</span>
+                  </NavLink>
+                </div>
+
+                <button
+                  type="button"
+                  className="app-shell__logout-button"
+                  onClick={handleLogout}
+                >
+                  Wyloguj się
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
