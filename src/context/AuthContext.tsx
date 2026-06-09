@@ -50,6 +50,37 @@ export type PetShare = {
   role: "vet" | "caregiver";
 };
 
+export type VetUser = {
+  id: string;
+  name: string;
+  licenseNumber: string;
+  specialization: string;
+  clinicName: string;
+  clinicAddress: string;
+  phone: string;
+  email: string;
+  password: string;
+};
+
+export type VetAccessCode = {
+  id: string;
+  petId: string;
+  code: string;
+  expiresAt: string;
+  usageLimit: number;
+  usageCount: number;
+  revoked: boolean;
+};
+
+export type VetGrant = {
+  id: string;
+  petId: string;
+  vetId: string;
+  codeId: string;
+  grantedAt: string;
+  revoked: boolean;
+};
+
 type AuthContextType = {
   currentUser: User | null;
   register: (name: string, email: string, password: string) => void;
@@ -65,6 +96,18 @@ type AuthContextType = {
   petShares: PetShare[];
   addPetShare: (share: Omit<PetShare, "id">) => void;
   removePetShare: (id: string) => void;
+  currentVet: VetUser | null;
+  vetUsers: VetUser[];
+  registerVet: (vet: Omit<VetUser, "id">) => void;
+  loginVet: (email: string, password: string) => boolean;
+  logoutVet: () => void;
+  vetAccessCodes: VetAccessCode[];
+  generateVetAccessCode: (petId: string, usageLimit: number) => VetAccessCode;
+  revokeVetAccessCode: (id: string) => void;
+  vetGrants: VetGrant[];
+  redeemVetAccessCode: (code: string) => { ok: boolean; message: string; petId?: string };
+  revokeVetGrant: (id: string) => void;
+  canVetAccessPet: (petId: string) => boolean;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -76,6 +119,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [petShares, setPetShares] = useState<PetShare[]>([]);
+  const [vetUsers, setVetUsers] = useState<VetUser[]>([]);
+  const [currentVet, setCurrentVet] = useState<VetUser | null>(null);
+  const [vetAccessCodes, setVetAccessCodes] = useState<VetAccessCode[]>([]);
+  const [vetGrants, setVetGrants] = useState<VetGrant[]>([]);
 
   const register = (name: string, email: string, password: string) => {
     const user = { name, email, password };
@@ -137,6 +184,98 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setPetShares((prev) => prev.filter((share) => share.id !== id));
   };
 
+  const registerVet = (vetData: Omit<VetUser, "id">) => {
+    const vet = { ...vetData, id: String(Date.now()) };
+    setVetUsers((prev) => [...prev, vet]);
+    setCurrentVet(vet);
+  };
+
+  const loginVet = (email: string, password: string): boolean => {
+    const vet = vetUsers.find((item) => item.email === email && item.password === password);
+    if (!vet) return false;
+    setCurrentVet(vet);
+    return true;
+  };
+
+  const logoutVet = () => setCurrentVet(null);
+
+  const generateVetAccessCode = (petId: string, usageLimit: number): VetAccessCode => {
+    const code = Array.from({ length: 6 }, () => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[
+      Math.floor(Math.random() * 32)
+    ]).join("");
+    const accessCode: VetAccessCode = {
+      id: `${Date.now()}-${code}`,
+      petId,
+      code,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      usageLimit,
+      usageCount: 0,
+      revoked: false,
+    };
+    setVetAccessCodes((prev) => [
+      ...prev.map((item) => item.petId === petId ? { ...item, revoked: true } : item),
+      accessCode,
+    ]);
+    return accessCode;
+  };
+
+  const revokeVetAccessCode = (id: string) => {
+    setVetAccessCodes((prev) =>
+      prev.map((code) => code.id === id ? { ...code, revoked: true } : code),
+    );
+  };
+
+  const redeemVetAccessCode = (rawCode: string) => {
+    if (!currentVet) return { ok: false, message: "Najpierw zaloguj się jako weterynarz." };
+    const normalizedCode = rawCode.trim().toUpperCase();
+    const accessCode = vetAccessCodes.find((item) => item.code === normalizedCode);
+    if (!accessCode) return { ok: false, message: "Nieprawidłowy kod dostępu." };
+    if (accessCode.revoked) return { ok: false, message: "Kod został cofnięty przez właściciela." };
+    if (new Date(accessCode.expiresAt).getTime() <= Date.now()) {
+      return { ok: false, message: "Kod dostępu wygasł." };
+    }
+    if (accessCode.usageCount >= accessCode.usageLimit) {
+      return { ok: false, message: "Limit użyć tego kodu został wyczerpany." };
+    }
+
+    const existingGrant = vetGrants.find(
+      (grant) => grant.petId === accessCode.petId && grant.vetId === currentVet.id && !grant.revoked,
+    );
+    if (!existingGrant) {
+      setVetGrants((prev) => [
+        ...prev,
+        {
+          id: `${Date.now()}-grant`,
+          petId: accessCode.petId,
+          vetId: currentVet.id,
+          codeId: accessCode.id,
+          grantedAt: new Date().toISOString(),
+          revoked: false,
+        },
+      ]);
+    }
+    setVetAccessCodes((prev) =>
+      prev.map((item) =>
+        item.id === accessCode.id ? { ...item, usageCount: item.usageCount + 1 } : item,
+      ),
+    );
+    return { ok: true, message: "Kartoteka została dodana do pacjentów.", petId: accessCode.petId };
+  };
+
+  const revokeVetGrant = (id: string) => {
+    setVetGrants((prev) =>
+      prev.map((grant) => grant.id === id ? { ...grant, revoked: true } : grant),
+    );
+  };
+
+  const canVetAccessPet = (petId: string) =>
+    Boolean(
+      currentVet &&
+      vetGrants.some(
+        (grant) => grant.petId === petId && grant.vetId === currentVet.id && !grant.revoked,
+      ),
+    );
+
   return (
     <AuthContext.Provider
       value={{
@@ -154,6 +293,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         petShares,
         addPetShare,
         removePetShare,
+        currentVet,
+        vetUsers,
+        registerVet,
+        loginVet,
+        logoutVet,
+        vetAccessCodes,
+        generateVetAccessCode,
+        revokeVetAccessCode,
+        vetGrants,
+        redeemVetAccessCode,
+        revokeVetGrant,
+        canVetAccessPet,
       }}
     >
       {children}

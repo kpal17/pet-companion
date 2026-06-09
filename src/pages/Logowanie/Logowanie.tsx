@@ -138,6 +138,15 @@ export default function Logowanie() {
                 <Icon name="appleIcon" viewBox="0 0 20 24" size={20} color="#161A32" />
               </button>
             </div>
+
+            <Link to="/vet/logowanie" className="vet-login-link">
+              <span>✚</span>
+              <div>
+                <strong>Pet Companion VET</strong>
+                <small>Logowanie dla weterynarzy</small>
+              </div>
+              <i>›</i>
+            </Link>
           </form>
         </div>
 

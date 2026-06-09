@@ -1,0 +1,552 @@
+.vet-auth-page,
+.vet-dashboard-page {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(218, 220, 255, 0.5), transparent 24%),
+    radial-gradient(circle at 12% 85%, rgba(255, 220, 234, 0.5), transparent 24%),
+    #faf7ff;
+  color: #171629;
+}
+
+.vet-auth-page {
+  padding: 28px 18px 50px;
+}
+
+.vet-auth-shell {
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.vet-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vet-brand-icon,
+.vet-auth-hero-icon {
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: #fbe7f1;
+  color: #825269;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(121, 84, 101, 0.12);
+}
+
+.vet-brand-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 25px;
+}
+
+.vet-brand strong,
+.vet-brand small {
+  display: block;
+}
+
+.vet-brand strong {
+  font-size: 18px;
+}
+
+.vet-brand strong span,
+.vet-topbar-brand span {
+  color: #e53f94;
+}
+
+.vet-brand small {
+  margin-top: 2px;
+  color: #8d8289;
+  font-size: 10px;
+}
+
+.vet-auth-intro {
+  margin: 44px auto 28px;
+  max-width: 470px;
+  text-align: center;
+}
+
+.vet-auth-hero-icon {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 22px;
+  font-size: 38px;
+}
+
+.vet-auth-intro h1 {
+  margin: 0;
+  font-size: clamp(28px, 7vw, 38px);
+}
+
+.vet-auth-intro p {
+  margin: 10px auto 0;
+  color: #625c69;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.vet-register-card {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid rgba(121, 84, 101, 0.12);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 50px rgba(72, 52, 83, 0.1);
+}
+
+.vet-register-card fieldset {
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  border: 0;
+}
+
+.vet-register-card legend {
+  margin-bottom: 7px;
+  color: #7a3f5b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.vet-register-card input:not([type="checkbox"]),
+.vet-register-card select,
+.vet-register-card textarea,
+.vet-visit-form input,
+.vet-visit-form textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 13px 15px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  background: #f5f2ff;
+  color: #252130;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.vet-register-card textarea,
+.vet-visit-form textarea {
+  resize: vertical;
+}
+
+.vet-register-card input:focus,
+.vet-register-card select:focus,
+.vet-register-card textarea:focus,
+.vet-visit-form input:focus,
+.vet-visit-form textarea:focus {
+  border-color: rgba(121, 84, 101, 0.4);
+  background: #fff;
+}
+
+.vet-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #625c69;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.vet-primary-button {
+  min-height: 50px;
+  border: 0;
+  border-radius: 15px;
+  background: #825269;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 9px 20px rgba(121, 84, 101, 0.24);
+}
+
+.vet-auth-switch,
+.vet-form-error {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+}
+
+.vet-auth-switch a,
+.vet-owner-return {
+  color: #d92c83;
+  font-weight: 700;
+}
+
+.vet-owner-return {
+  text-align: center;
+  font-size: 11px;
+}
+
+.vet-form-error,
+.vet-code-message {
+  color: #b82d62;
+}
+
+.vet-login-page .vet-auth-shell {
+  max-width: 430px;
+}
+
+.vet-topbar {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  min-height: 68px;
+  padding: 0 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid #eadde4;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(18px);
+}
+
+.vet-topbar-brand {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.vet-topbar > strong {
+  font-size: 13px;
+}
+
+.vet-topbar > button {
+  width: 40px;
+  height: 40px;
+  justify-self: end;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #a4768d;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  box-shadow: 0 2px 9px rgba(69, 49, 58, 0.2);
+}
+
+.vet-dashboard,
+.vet-patient-page {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 18px 50px;
+}
+
+.vet-welcome,
+.vet-code-redeem,
+.vet-patients-section,
+.vet-patient-hero,
+.vet-visit-form,
+.vet-records {
+  padding: 22px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(72, 52, 83, 0.08);
+}
+
+.vet-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: linear-gradient(145deg, #765163, #a57990);
+  color: #fff;
+}
+
+.vet-welcome span,
+.vet-code-redeem span,
+.vet-section-heading span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.vet-welcome h1,
+.vet-code-redeem h2,
+.vet-section-heading h2 {
+  margin: 0;
+}
+
+.vet-welcome h1 {
+  font-size: 24px;
+}
+
+.vet-welcome p,
+.vet-code-redeem p {
+  margin: 5px 0 0;
+  font-size: 11px;
+  opacity: 0.78;
+}
+
+.vet-license {
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.vet-code-redeem,
+.vet-patients-section,
+.vet-visit-form,
+.vet-records {
+  margin-top: 16px;
+}
+
+.vet-code-redeem form {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 9px;
+}
+
+.vet-code-redeem input {
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #eadde4;
+  border-radius: 13px;
+  background: #faf7fb;
+  font: inherit;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.vet-code-redeem button {
+  padding: 0 16px;
+  border: 0;
+  border-radius: 13px;
+  background: #e53f94;
+  color: #fff;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.vet-code-message {
+  margin: 10px 0 0;
+  font-size: 11px;
+}
+
+.vet-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.vet-section-heading h2 {
+  font-size: 18px;
+}
+
+.vet-section-heading > strong {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: #ffe7f2;
+  color: #d92c83;
+}
+
+.vet-patient-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.vet-patient-grid > button {
+  padding: 13px;
+  display: grid;
+  grid-template-columns: 45px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid #eee3e9;
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+}
+
+.vet-patient-grid > button > span {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #fff0f7;
+  font-size: 21px;
+}
+
+.vet-patient-grid strong,
+.vet-patient-grid small {
+  display: block;
+}
+
+.vet-patient-grid small {
+  margin-top: 3px;
+  color: #94878e;
+  font-size: 10px;
+}
+
+.vet-patient-grid i {
+  color: #d92c83;
+  font-size: 22px;
+  font-style: normal;
+}
+
+.vet-empty-state {
+  padding: 28px 15px;
+  color: #8d8188;
+  text-align: center;
+}
+
+.vet-empty-state > span {
+  font-size: 38px;
+}
+
+.vet-empty-state h3 {
+  margin: 8px 0 4px;
+  color: #352e38;
+  font-size: 15px;
+}
+
+.vet-empty-state p {
+  margin: 0;
+  font-size: 11px;
+}
+
+.vet-patient-hero {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.vet-patient-hero > div {
+  width: 70px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background: #ffeaf4;
+  font-size: 35px;
+}
+
+.vet-patient-hero h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.vet-patient-hero p {
+  margin: 4px 0 0;
+  color: #8a7d84;
+  font-size: 11px;
+}
+
+.vet-patient-hero > strong {
+  color: #765163;
+  font-size: 12px;
+}
+
+.vet-visit-form form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.vet-visit-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #62545b;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.vet-visit-form .vet-primary-button {
+  grid-column: 1 / -1;
+}
+
+.vet-records article {
+  padding: 14px 0;
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 13px;
+  border-top: 1px solid #f0e7eb;
+}
+
+.vet-record-date {
+  color: #a18f98;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.vet-records h3 {
+  margin: 0 0 5px;
+  font-size: 14px;
+}
+
+.vet-records p {
+  margin: 3px 0;
+  color: #6e6268;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.vet-records small {
+  display: block;
+  margin-top: 6px;
+  color: #a18f98;
+  font-size: 9px;
+}
+
+@media (max-width: 620px) {
+  .vet-register-card {
+    padding: 22px;
+  }
+
+  .vet-topbar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .vet-topbar > strong {
+    display: none;
+  }
+
+  .vet-patient-grid,
+  .vet-visit-form form {
+    grid-template-columns: 1fr;
+  }
+
+  .vet-code-redeem form {
+    grid-template-columns: 1fr;
+  }
+
+  .vet-code-redeem button {
+    min-height: 44px;
+  }
+
+  .vet-patient-hero {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+
+  .vet-patient-hero > div {
+    width: 58px;
+    height: 58px;
+  }
+
+  .vet-patient-hero > strong {
+    grid-column: 2;
+  }
+}

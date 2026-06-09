@@ -9,14 +9,21 @@ export default function PetProfilePage() {
   const navigate = useNavigate();
   const {
     addPetShare,
+    generateVetAccessCode,
     entries,
     petShares,
     pets,
     reminders,
     removePetShare,
+    revokeVetAccessCode,
+    revokeVetGrant,
+    vetAccessCodes,
+    vetGrants,
+    vetUsers,
   } = useAuth();
   const [shareEmail, setShareEmail] = useState("");
-  const [shareRole, setShareRole] = useState<"vet" | "caregiver">("vet");
+  const [shareRole, setShareRole] = useState<"vet" | "caregiver">("caregiver");
+  const [codeUsageLimit, setCodeUsageLimit] = useState(1);
 
   const pet = pets.find((p) => p.id === id);
   const petEntries = entries
@@ -26,6 +33,16 @@ export default function PetProfilePage() {
     .filter((reminder) => reminder.petId === id)
     .sort((a, b) => a.date.localeCompare(b.date));
   const shares = petShares.filter((share) => share.petId === id);
+  const accessCodes = vetAccessCodes
+    .filter((code) => code.petId === id)
+    .sort((a, b) => b.expiresAt.localeCompare(a.expiresAt));
+  const activeCode = accessCodes.find(
+    (code) =>
+      !code.revoked &&
+      code.usageCount < code.usageLimit &&
+      new Date(code.expiresAt).getTime() > Date.now(),
+  );
+  const activeVetGrants = vetGrants.filter((grant) => grant.petId === id && !grant.revoked);
 
   const submitShare = (event: React.FormEvent) => {
     event.preventDefault();
@@ -162,26 +179,96 @@ export default function PetProfilePage() {
         <div className="section-card">
           <div className="profile-section-heading">
             <div>
-              <span>Dostęp do danych</span>
-              <h3>Udostępnienia</h3>
+              <span>Pet Companion VET</span>
+              <h3>Dostęp weterynaryjny</h3>
             </div>
           </div>
           <p className="sharing-description">
-            Dostęp dotyczy wyłącznie profilu i kartoteki pupila {pet.name}.
+            Kod udostępnia wyłącznie kartotekę pupila {pet.name}. Jest ważny 24 godziny
+            i nie daje dostępu do Twojego konta ani innych pupili.
+          </p>
+
+          {activeCode ? (
+            <div className="vet-code-card">
+              <span>Aktywny kod</span>
+              <strong>{activeCode.code}</strong>
+              <p>
+                Ważny do {new Date(activeCode.expiresAt).toLocaleString("pl-PL", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })} · użycia {activeCode.usageCount}/{activeCode.usageLimit}
+              </p>
+              <button type="button" onClick={() => revokeVetAccessCode(activeCode.id)}>
+                Cofnij kod
+              </button>
+            </div>
+          ) : (
+            <div className="vet-code-generate">
+              <label>
+                Limit użyć
+                <select
+                  value={codeUsageLimit}
+                  onChange={(event) => setCodeUsageLimit(Number(event.target.value))}
+                >
+                  <option value={1}>Jednorazowy</option>
+                  <option value={2}>2 użycia</option>
+                  <option value={3}>3 użycia</option>
+                </select>
+              </label>
+              <button
+                type="button"
+                onClick={() => generateVetAccessCode(pet.id, codeUsageLimit)}
+              >
+                Wygeneruj kod na 24h
+              </button>
+            </div>
+          )}
+
+          {activeVetGrants.length > 0 && (
+            <div className="vet-access-list">
+              <span className="vet-access-list-title">Aktywne dostępy</span>
+              {activeVetGrants.map((grant) => {
+                const vet = vetUsers.find((item) => item.id === grant.vetId);
+                return (
+                  <div key={grant.id}>
+                    <span>
+                      <strong>{vet?.name || "Weterynarz"}</strong>
+                      {vet?.clinicName || vet?.email || "Profil VET"}
+                    </span>
+                    <button type="button" onClick={() => revokeVetGrant(grant.id)}>
+                      Cofnij dostęp
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="section-card">
+          <div className="profile-section-heading">
+            <div>
+              <span>Dostęp do danych</span>
+              <h3>Pozostali opiekunowie</h3>
+            </div>
+          </div>
+          <p className="sharing-description">
+            Udostępnienia dla współopiekunów dotyczą wyłącznie profilu pupila {pet.name}.
           </p>
           <form className="sharing-form" onSubmit={submitShare}>
             <input
               type="email"
               value={shareEmail}
               onChange={(event) => setShareEmail(event.target.value)}
-              placeholder="e-mail weterynarza lub opiekuna"
+              placeholder="e-mail współopiekuna"
               required
             />
             <select
               value={shareRole}
               onChange={(event) => setShareRole(event.target.value as "vet" | "caregiver")}
             >
-              <option value="vet">Weterynarz</option>
               <option value="caregiver">Opiekun</option>
             </select>
             <button type="submit">Udostępnij</button>

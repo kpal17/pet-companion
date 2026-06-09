@@ -1,0 +1,184 @@
+.owner-vet-page {
+  width: 100%;
+  max-width: 720px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 20px 18px 40px;
+  background: #f5eef2;
+  color: #211a2b;
+}
+
+.owner-vet-hero,
+.owner-vet-how,
+.owner-vet-pets {
+  padding: 22px;
+  border-radius: 23px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(83, 52, 67, 0.08);
+}
+
+.owner-vet-hero {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 16px;
+  background: linear-gradient(145deg, #765163, #a57990);
+  color: #fff;
+}
+
+.owner-vet-icon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 31px;
+  font-weight: 800;
+}
+
+.owner-vet-hero span,
+.owner-vet-heading span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.owner-vet-hero h1,
+.owner-vet-how h2,
+.owner-vet-heading h2 {
+  margin: 0;
+}
+
+.owner-vet-hero h1 {
+  font-size: 25px;
+}
+
+.owner-vet-hero p {
+  margin: 7px 0 0;
+  font-size: 11px;
+  line-height: 1.55;
+  opacity: 0.82;
+}
+
+.owner-vet-how,
+.owner-vet-pets {
+  margin-top: 16px;
+}
+
+.owner-vet-how h2,
+.owner-vet-heading h2 {
+  font-size: 17px;
+}
+
+.owner-vet-how > div {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.owner-vet-how article {
+  padding: 12px;
+  border-radius: 15px;
+  background: #faf6f8;
+}
+
+.owner-vet-how strong {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 8px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #ffe3f0;
+  color: #d92c83;
+  font-size: 11px;
+}
+
+.owner-vet-how article span {
+  color: #6f6269;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.owner-vet-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.owner-vet-heading button {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 11px;
+  background: #ffe5f1;
+  color: #d42d7f;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.owner-vet-pet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.owner-vet-pet-list button {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 43px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid #eee3e9;
+  border-radius: 15px;
+  background: #fff;
+  text-align: left;
+}
+
+.owner-vet-pet-list button > span {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #fff0f7;
+  font-size: 20px;
+}
+
+.owner-vet-pet-list strong,
+.owner-vet-pet-list small {
+  display: block;
+}
+
+.owner-vet-pet-list small {
+  margin-top: 3px;
+  color: #96888f;
+  font-size: 9px;
+}
+
+.owner-vet-pet-list i {
+  color: #d92c83;
+  font-size: 21px;
+  font-style: normal;
+}
+
+.owner-vet-empty {
+  padding: 25px 10px;
+  color: #8f8188;
+  font-size: 11px;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .owner-vet-how > div {
+    grid-template-columns: 1fr;
+  }
+}
