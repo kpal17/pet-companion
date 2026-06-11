@@ -24,6 +24,10 @@ export type Entry = {
   date: string;
   recordType: "vaccination" | "visit" | "medication" | "measurement" | "other";
   doctor?: string;
+  visitTime?: string;
+  clinicName?: string;
+  clinicAddress?: string;
+  clinicPhone?: string;
   diagnosis?: string;
   recommendations?: string;
   medicationName?: string;

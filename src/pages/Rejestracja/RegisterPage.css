@@ -93,6 +93,31 @@ input {
   opacity: 0.9;
 }
 
+.register-error {
+  margin: -4px 0 0;
+  color: #b82d62;
+  font-size: 12px;
+  text-align: center;
+}
+
+.register-consent {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 9px;
+  color: #817478;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.register-consent input {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  accent-color: #7a5666;
+}
+
 .login {
   text-align: center;
   font-size: 14px;

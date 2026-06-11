@@ -12,9 +12,15 @@ const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    if (password !== confirmPassword) {
+      setError("Hasła nie są takie same.");
+      return;
+    }
     register(name, email, password);
     navigate("/home");
   };
@@ -60,9 +66,11 @@ const RegisterPage: React.FC = () => {
           Hasło
           <input
             type="password"
-            placeholder="••••••••"
+            placeholder="Minimum 6 znaków"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            minLength={6}
+            autoComplete="new-password"
             required
           />
         </label>
@@ -74,8 +82,17 @@ const RegisterPage: React.FC = () => {
             placeholder="••••••••"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            minLength={6}
+            autoComplete="new-password"
             required
           />
+        </label>
+
+        {error && <p className="register-error">{error}</p>}
+
+        <label className="register-consent">
+          <input type="checkbox" required />
+          <span>Akceptuję regulamin świadczenia usług i politykę prywatności.</span>
         </label>
 
         <button type="submit" className="primary-btn">

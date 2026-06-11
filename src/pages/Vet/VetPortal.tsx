@@ -856,13 +856,21 @@ export function VetPatientPage() {
 
   const addVisit = (event: React.FormEvent) => {
     event.preventDefault();
+    const now = new Date();
+    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
+      .toISOString()
+      .split("T")[0];
     addEntry({
       petId: pet.id,
       category: "Wizyta weterynaryjna",
       description,
-      date: new Date().toISOString().split("T")[0],
+      date: localDate,
       recordType: "visit",
-      doctor: `${currentVet.name}, ${currentVet.clinicName}`,
+      doctor: currentVet.name,
+      visitTime: now.toTimeString().slice(0, 5),
+      clinicName: currentVet.clinicName,
+      clinicAddress: currentVet.clinicAddress,
+      clinicPhone: currentVet.phone,
       diagnosis,
       recommendations,
       nextDate,

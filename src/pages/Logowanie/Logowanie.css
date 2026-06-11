@@ -221,6 +221,17 @@
   transition: opacity 0.15s;
 }
 
+.field-eye svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+  fill: none;
+  stroke: #817478;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .field-eye:hover {
   opacity: 0.7;
 }
@@ -318,6 +329,16 @@
 .social-btn:hover {
   background: #fdf9fb;
   border-color: rgba(210, 195, 199, 0.7);
+}
+
+.social-btn svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.social-btn:last-child svg {
+  fill: #161a32;
 }
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */

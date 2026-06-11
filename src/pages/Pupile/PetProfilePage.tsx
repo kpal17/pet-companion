@@ -121,23 +121,88 @@ export default function PetProfilePage() {
                   measurement: "📋",
                   other: "📎",
                 };
+                const matchingVet = vetUsers.find(
+                  (vet) => entry.doctor?.toLowerCase().includes(vet.name.toLowerCase()),
+                );
+                const clinicName = entry.clinicName || matchingVet?.clinicName;
+                const clinicAddress = entry.clinicAddress || matchingVet?.clinicAddress;
+                const clinicPhone = entry.clinicPhone || matchingVet?.phone;
+                const hasDetails = Boolean(
+                  entry.description ||
+                  entry.diagnosis ||
+                  entry.recommendations ||
+                  entry.medicationName ||
+                  entry.dosage ||
+                  entry.doctor ||
+                  clinicName ||
+                  clinicAddress ||
+                  clinicPhone,
+                );
                 return (
                   <article key={entry.id} className="health-record-item">
                     <div className={`health-record-icon health-record-icon-${entry.recordType}`}>
                       {icons[entry.recordType]}
                     </div>
                     <div className="health-record-body">
-                      <span>
-                        {new Date(`${entry.date}T12:00:00`).toLocaleDateString("pl-PL")}
-                        {entry.doctor ? ` · ${entry.doctor}` : ""}
+                      <span className="health-record-date">
+                        {new Date(`${entry.date}T12:00:00`).toLocaleDateString("pl-PL", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                        {entry.visitTime ? ` · ${entry.visitTime}` : ""}
                       </span>
                       <strong>{entry.category}</strong>
-                      {entry.description && <p>{entry.description}</p>}
-                      {entry.diagnosis && <p><b>Diagnoza:</b> {entry.diagnosis}</p>}
-                      {entry.medicationName && (
-                        <p><b>{entry.medicationName}</b>{entry.dosage ? ` · ${entry.dosage}` : ""}</p>
+                      {(entry.doctor || clinicName) && (
+                        <p className="health-record-preview">
+                          {entry.doctor || "Weterynarz"}
+                          {clinicName ? ` · ${clinicName}` : ""}
+                        </p>
                       )}
-                      {entry.recommendations && <p><b>Zalecenia:</b> {entry.recommendations}</p>}
+                      {hasDetails && (
+                        <details className="health-record-details">
+                          <summary>
+                            <span>Pokaż szczegóły</span>
+                            <i>⌄</i>
+                          </summary>
+                          <div className="health-record-details-content">
+                            {(entry.visitTime || clinicName || clinicAddress || clinicPhone) && (
+                              <div className="visit-information-grid">
+                                {entry.visitTime && (
+                                  <div><span>Godzina</span><strong>{entry.visitTime}</strong></div>
+                                )}
+                                {entry.doctor && (
+                                  <div><span>Weterynarz</span><strong>{entry.doctor}</strong></div>
+                                )}
+                                {clinicName && (
+                                  <div><span>Klinika</span><strong>{clinicName}</strong></div>
+                                )}
+                                {clinicAddress && (
+                                  <div><span>Adres</span><strong>{clinicAddress}</strong></div>
+                                )}
+                                {clinicPhone && (
+                                  <div>
+                                    <span>Telefon</span>
+                                    <a href={`tel:${clinicPhone.replace(/\s/g, "")}`}>{clinicPhone}</a>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {entry.description && <p>{entry.description}</p>}
+                            {entry.diagnosis && <p><b>Diagnoza:</b> {entry.diagnosis}</p>}
+                            {entry.medicationName && (
+                              <p><b>{entry.medicationName}</b>{entry.dosage ? ` · ${entry.dosage}` : ""}</p>
+                            )}
+                            {entry.recommendations && <p><b>Zalecenia:</b> {entry.recommendations}</p>}
+                            {entry.nextDate && (
+                              <p>
+                                <b>Kolejny termin:</b>{" "}
+                                {new Date(`${entry.nextDate}T12:00:00`).toLocaleDateString("pl-PL")}
+                              </p>
+                            )}
+                          </div>
+                        </details>
+                      )}
                     </div>
                   </article>
                 );

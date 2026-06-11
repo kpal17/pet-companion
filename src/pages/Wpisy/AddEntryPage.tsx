@@ -26,6 +26,10 @@ export default function AddEntryPage() {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [doctor, setDoctor] = useState("");
+  const [visitTime, setVisitTime] = useState("");
+  const [clinicName, setClinicName] = useState("");
+  const [clinicAddress, setClinicAddress] = useState("");
+  const [clinicPhone, setClinicPhone] = useState("");
   const [diagnosis, setDiagnosis] = useState("");
   const [recommendations, setRecommendations] = useState("");
   const [medicationName, setMedicationName] = useState("");
@@ -43,6 +47,10 @@ export default function AddEntryPage() {
       date,
       recordType,
       doctor,
+      visitTime,
+      clinicName,
+      clinicAddress,
+      clinicPhone,
       diagnosis,
       recommendations,
       medicationName,
@@ -126,12 +134,49 @@ export default function AddEntryPage() {
         {recordType === "visit" && (
           <>
             <div className="form-field">
-              <label htmlFor="entry-doctor">Lekarz / lecznica</label>
+              <label htmlFor="entry-doctor">Weterynarz</label>
               <input
                 id="entry-doctor"
                 value={doctor}
                 onChange={(e) => setDoctor(e.target.value)}
-                placeholder="np. lek. Anna Kowalska, Artemis"
+                placeholder="np. lek. wet. Anna Kowalska"
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="entry-time">Godzina wizyty</label>
+              <input
+                id="entry-time"
+                type="time"
+                value={visitTime}
+                onChange={(e) => setVisitTime(e.target.value)}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="entry-clinic">Nazwa kliniki</label>
+              <input
+                id="entry-clinic"
+                value={clinicName}
+                onChange={(e) => setClinicName(e.target.value)}
+                placeholder="np. Przychodnia Artemis"
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="entry-clinic-phone">Telefon kliniki</label>
+              <input
+                id="entry-clinic-phone"
+                type="tel"
+                value={clinicPhone}
+                onChange={(e) => setClinicPhone(e.target.value)}
+                placeholder="np. +48 123 456 789"
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="entry-clinic-address">Adres kliniki</label>
+              <input
+                id="entry-clinic-address"
+                value={clinicAddress}
+                onChange={(e) => setClinicAddress(e.target.value)}
+                placeholder="np. ul. Zdrowa 12, Warszawa"
               />
             </div>
             <div className="form-field">
@@ -211,7 +256,7 @@ export default function AddEntryPage() {
             id="entry-date"
             type="date"
             value={date}
-            min={today}
+            max={today}
             onChange={(e) => setDate(e.target.value)}
             required
           />

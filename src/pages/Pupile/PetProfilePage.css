@@ -218,7 +218,7 @@
   min-width: 0;
 }
 
-.health-record-body > span {
+.health-record-date {
   display: block;
   color: #9d9097;
   font-size: 10px;
@@ -236,6 +236,95 @@
   color: #776b71;
   font-size: 11px;
   line-height: 1.45;
+}
+
+.health-record-preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.health-record-details {
+  margin-top: 9px;
+  border-top: 1px solid #ebe3ef;
+}
+
+.health-record-details summary {
+  padding-top: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #875f73;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.health-record-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.health-record-details summary i {
+  font-size: 15px;
+  font-style: normal;
+  transition: transform 0.2s ease;
+}
+
+.health-record-details[open] summary i {
+  transform: rotate(180deg);
+}
+
+.health-record-details-content {
+  padding-top: 10px;
+}
+
+.visit-information-grid {
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.visit-information-grid > div {
+  min-width: 0;
+  padding: 9px 10px;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.visit-information-grid span,
+.visit-information-grid strong,
+.visit-information-grid a {
+  display: block;
+}
+
+.visit-information-grid span {
+  margin-bottom: 2px;
+  color: #a2949b;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.visit-information-grid strong,
+.visit-information-grid a {
+  overflow-wrap: anywhere;
+  color: #4c3f46;
+  font-size: 10px;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.visit-information-grid a {
+  color: #c52f72;
+}
+
+@media (max-width: 480px) {
+  .visit-information-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .profile-section-heading {
