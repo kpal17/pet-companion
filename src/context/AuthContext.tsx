@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 
 type User = {
   name: string;
@@ -81,6 +81,15 @@ export type VetGrant = {
   revoked: boolean;
 };
 
+export type VetActivity = {
+  id: string;
+  vetId: string;
+  petId: string;
+  type: "access_granted" | "record_opened" | "entry_added";
+  createdAt: string;
+  description: string;
+};
+
 type AuthContextType = {
   currentUser: User | null;
   register: (name: string, email: string, password: string) => void;
@@ -99,6 +108,7 @@ type AuthContextType = {
   currentVet: VetUser | null;
   vetUsers: VetUser[];
   registerVet: (vet: Omit<VetUser, "id">) => void;
+  updateVetProfile: (profile: Omit<VetUser, "id" | "password">) => void;
   loginVet: (email: string, password: string) => boolean;
   logoutVet: () => void;
   vetAccessCodes: VetAccessCode[];
@@ -108,6 +118,12 @@ type AuthContextType = {
   redeemVetAccessCode: (code: string) => { ok: boolean; message: string; petId?: string };
   revokeVetGrant: (id: string) => void;
   canVetAccessPet: (petId: string) => boolean;
+  vetActivities: VetActivity[];
+  logVetActivity: (
+    petId: string,
+    type: VetActivity["type"],
+    description: string,
+  ) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -123,6 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentVet, setCurrentVet] = useState<VetUser | null>(null);
   const [vetAccessCodes, setVetAccessCodes] = useState<VetAccessCode[]>([]);
   const [vetGrants, setVetGrants] = useState<VetGrant[]>([]);
+  const [vetActivities, setVetActivities] = useState<VetActivity[]>([]);
 
   const register = (name: string, email: string, password: string) => {
     const user = { name, email, password };
@@ -190,6 +207,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setCurrentVet(vet);
   };
 
+  const updateVetProfile = (profile: Omit<VetUser, "id" | "password">) => {
+    if (!currentVet) return;
+    const updatedVet = { ...currentVet, ...profile };
+    setVetUsers((prev) =>
+      prev.map((vet) => vet.id === currentVet.id ? updatedVet : vet),
+    );
+    setCurrentVet(updatedVet);
+  };
+
   const loginVet = (email: string, password: string): boolean => {
     const vet = vetUsers.find((item) => item.email === email && item.password === password);
     if (!vet) return false;
@@ -253,6 +279,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           revoked: false,
         },
       ]);
+      setVetActivities((prev) => [
+        ...prev,
+        {
+          id: `${Date.now()}-access`,
+          vetId: currentVet.id,
+          petId: accessCode.petId,
+          type: "access_granted",
+          createdAt: new Date().toISOString(),
+          description: "Uzyskano dostęp przy użyciu kodu właściciela.",
+        },
+      ]);
     }
     setVetAccessCodes((prev) =>
       prev.map((item) =>
@@ -276,6 +313,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       ),
     );
 
+  const logVetActivity = useCallback((
+    petId: string,
+    type: VetActivity["type"],
+    description: string,
+  ) => {
+    if (!currentVet) return;
+    setVetActivities((prev) => {
+      const latest = prev[prev.length - 1];
+      if (
+        latest &&
+        latest.vetId === currentVet.id &&
+        latest.petId === petId &&
+        latest.type === type &&
+        Date.now() - new Date(latest.createdAt).getTime() < 2000
+      ) {
+        return prev;
+      }
+      return [
+        ...prev,
+        {
+          id: `${Date.now()}-${type}`,
+          vetId: currentVet.id,
+          petId,
+          type,
+          createdAt: new Date().toISOString(),
+          description,
+        },
+      ];
+    });
+  }, [currentVet]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -296,6 +364,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         currentVet,
         vetUsers,
         registerVet,
+        updateVetProfile,
         loginVet,
         logoutVet,
         vetAccessCodes,
@@ -305,6 +374,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         redeemVetAccessCode,
         revokeVetGrant,
         canVetAccessPet,
+        vetActivities,
+        logVetActivity,
       }}
     >
       {children}

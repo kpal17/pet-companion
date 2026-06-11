@@ -6,18 +6,22 @@ import "./PetsListPage.css";
 
 export default function PetsListPage() {
   const navigate = useNavigate();
-  const { pets } = useAuth();
+  const { entries, pets, reminders } = useAuth();
 
   return (
     <div className="pets-list-page">
-      <div className="pets-header">
-        <h1>Moje pupile</h1>
-        <button className="add-btn" onClick={() => navigate("/pupile/dodaj")} aria-label="Dodaj pupila">
-          +
-        </button>
-      </div>
-
       <div className="pets-content">
+        <section className="pets-header">
+          <div>
+            <span>Profile i kartoteki</span>
+            <h1>Moje pupile</h1>
+            <p>Zdrowie, terminy i udostępnianie danych w jednym miejscu.</p>
+          </div>
+          <button className="add-btn" onClick={() => navigate("/pupile/dodaj")} aria-label="Dodaj pupila">
+            +
+          </button>
+        </section>
+
         {pets.length === 0 ? (
           <div className="empty-state">
             <div className="empty-emoji">🐾</div>
@@ -30,7 +34,7 @@ export default function PetsListPage() {
         ) : (
           <div className="pets-list">
             {pets.map((pet) => (
-              <div
+              <button
                 key={pet.id}
                 className="pet-card"
                 onClick={() => navigate(`/pupile/${pet.id}`)}
@@ -39,9 +43,13 @@ export default function PetsListPage() {
                 <div className="pet-info">
                   <strong>{pet.name}</strong>
                   <span>{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</span>
+                  <small>
+                    {entries.filter((entry) => entry.petId === pet.id).length} wpisów ·{" "}
+                    {reminders.filter((reminder) => reminder.petId === pet.id).length} terminów
+                  </small>
                 </div>
                 <div className="pet-arrow">›</div>
-              </div>
+              </button>
             ))}
           </div>
         )}

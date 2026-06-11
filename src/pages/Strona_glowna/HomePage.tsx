@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./HomePage.css";
 
 import { Icon } from "../../Icon.tsx";
-import { useAuth } from "../../context/AuthContext.tsx";
-import { speciesEmoji, dateBadge } from "../Pupile/petUtils.ts";
+import { useAuth, type Entry } from "../../context/AuthContext.tsx";
+import { dateBadge, speciesEmoji } from "../Pupile/petUtils.ts";
 import { IconName } from "./assets/icons.ts";
 
 function nextReminderDate(date: string, recurrence: string) {
@@ -27,12 +27,19 @@ function nextReminderDate(date: string, recurrence: string) {
   return occurrence >= today ? occurrence : null;
 }
 
-const HomePage: React.FC = () => {
-  const navigate = useNavigate();
-  const { pets, currentUser, reminders } = useAuth();
-  const [showAllUpcoming, setShowAllUpcoming] = useState(false);
+const entryIcons: Record<Entry["recordType"], string> = {
+  vaccination: "💉",
+  visit: "🩺",
+  medication: "💊",
+  measurement: "📋",
+  other: "📎",
+};
 
-  const upcomingEntries = reminders
+export default function HomePage() {
+  const navigate = useNavigate();
+  const { currentUser, entries, pets, reminders } = useAuth();
+
+  const upcoming = reminders
     .map((reminder) => ({
       reminder,
       occurrence: nextReminderDate(reminder.date, reminder.recurrence),
@@ -40,149 +47,207 @@ const HomePage: React.FC = () => {
     .filter(
       (item): item is typeof item & { occurrence: Date } => item.occurrence !== null,
     )
-    .sort((a, b) => a.occurrence.getTime() - b.occurrence.getTime());
+    .sort((a, b) => a.occurrence.getTime() - b.occurrence.getTime())
+    .slice(0, 3);
 
-  const visibleUpcoming = showAllUpcoming ? upcomingEntries : upcomingEntries.slice(0, 2);
-  const hasMore = upcomingEntries.length > 2;
+  const recentEntries = [...entries]
+    .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id))
+    .slice(0, 4);
+
+  const recentPetIds = [
+    ...recentEntries.map((entry) => entry.petId),
+    ...upcoming.map((item) => item.reminder.petId),
+    ...pets.map((pet) => pet.id),
+  ].filter((id, index, list) => list.indexOf(id) === index);
+
+  const recentPets = recentPetIds
+    .map((id) => pets.find((pet) => pet.id === id))
+    .filter((pet): pet is NonNullable<typeof pet> => Boolean(pet))
+    .slice(0, 4);
 
   return (
-    <div className="home">
-      {/* HEADER */}
-      <header className="header">
-        <h1>Cześć, {currentUser?.name || "Opiekunie"}! 🐾</h1>
-      </header>
-
-      {/* QUICK ACTIONS */}
-      <section className="section">
-        <div className="section-header">
-          <h2>Szybkie akcje</h2>
+    <main className="owner-dashboard">
+      <section className="owner-welcome">
+        <div>
+          <span>Dzień dobry,</span>
+          <h1>{currentUser?.name || "Opiekunie"}</h1>
+          <p>Wszystko, co ważne dla zdrowia i codziennej opieki nad pupilami.</p>
         </div>
-
-        <div className="actions">
-          <ActionCard icon="addIcon" label="Dodaj Pupila" onClick={() => navigate("/pupile/dodaj")} />
-          <ActionCard icon="bookIcon" label="Moje pupile" onClick={() => navigate("/pupile")} />
-          <ActionCard icon="noteIcon" label="Nowy Wpis" onClick={() => navigate("/wpisy/nowy")} />
-          <ActionCard icon="remindIcon" label="Przypomnij" onClick={() => navigate("/planer")} />
+        <div className="owner-welcome__stats">
+          <strong>{pets.length}</strong>
+          <span>{pets.length === 1 ? "pupil" : "pupile"}</span>
         </div>
       </section>
 
-      {/* UPCOMING */}
-      <section className="section">
-        <div className="section-header">
-          <h2>Nadchodzące</h2>
-          {hasMore && (
-            <span className="link" onClick={() => setShowAllUpcoming((v) => !v)}>
-              {showAllUpcoming ? "Zwiń" : "Zobacz wszystkie"}
-            </span>
-          )}
+      <section className="owner-dashboard-card">
+        <SectionHeading eyebrow="Najczęstsze zadania" title="Szybkie akcje" />
+        <div className="owner-quick-actions">
+          <QuickAction
+            icon="addIcon"
+            title="Dodaj pupila"
+            description="Utwórz nowy profil"
+            onClick={() => navigate("/pupile/dodaj")}
+          />
+          <QuickAction
+            icon="noteIcon"
+            title="Dodaj wpis"
+            description={pets.length ? "Zdrowie i pomiary" : "Najpierw dodaj pupila"}
+            onClick={() => navigate(pets.length ? "/wpisy/nowy" : "/pupile/dodaj")}
+          />
+          <QuickAction
+            icon="remindIcon"
+            title="Zaplanuj"
+            description="Termin lub przypomnienie"
+            onClick={() => navigate("/planer")}
+          />
         </div>
+      </section>
 
-        {visibleUpcoming.length === 0 ? (
-          <p className="upcoming-empty">Brak nadchodzących wydarzeń</p>
+      <section className="owner-dashboard-card">
+        <SectionHeading
+          eyebrow="Profile pod ręką"
+          title="Twoje pupile"
+          action={pets.length > 0 ? <Link to="/pupile">Zobacz wszystkie</Link> : undefined}
+        />
+        {recentPets.length === 0 ? (
+          <div className="owner-empty-state">
+            <span>🐾</span>
+            <h3>Dodaj pierwszego pupila</h3>
+            <p>Kartoteka, planer i bezpieczny dostęp VET zaczną się od jego profilu.</p>
+            <button type="button" onClick={() => navigate("/pupile/dodaj")}>Dodaj pupila</button>
+          </div>
         ) : (
-          visibleUpcoming.map(({ reminder, occurrence }) => {
-            const pet = pets.find((p) => p.id === reminder.petId);
-            const occurrenceDate = occurrence.toISOString().split("T")[0];
-            const { text: badge, urgent } = dateBadge(occurrenceDate);
-            return (
-              <UpcomingItem
-                key={reminder.id}
-                emoji={speciesEmoji(pet?.species ?? "")}
-                title={`${pet?.name ?? "Pupil"}: ${reminder.title}`}
-                subtitle={`${reminder.time}${reminder.notes ? ` · ${reminder.notes}` : ""}`}
-                badge={badge}
-                badgeType={urgent ? "urgent" : undefined}
-              />
-            );
-          })
+          <div className="owner-pet-list">
+            {recentPets.map((pet) => {
+              const petEntries = entries.filter((entry) => entry.petId === pet.id);
+              const nextEvent = upcoming.find((item) => item.reminder.petId === pet.id);
+              return (
+                <button key={pet.id} type="button" onClick={() => navigate(`/pupile/${pet.id}`)}>
+                  <span>{speciesEmoji(pet.species)}</span>
+                  <div>
+                    <strong>{pet.name}</strong>
+                    <small>{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</small>
+                  </div>
+                  <time>
+                    {nextEvent
+                      ? `Termin ${nextEvent.occurrence.toLocaleDateString("pl-PL", { day: "numeric", month: "short" })}`
+                      : `${petEntries.length} wpisów`}
+                  </time>
+                  <i>›</i>
+                </button>
+              );
+            })}
+          </div>
         )}
       </section>
 
-      {/* ACTIVITY */}
-      <section className="section">
-        <div className="section-header">
-          <h2>Ostatnia aktywność</h2>
-          <span className="link">Zobacz wszystko</span>
-        </div>
+      <div className="owner-dashboard-columns">
+        <section className="owner-dashboard-card">
+          <SectionHeading
+            eyebrow="Plan opieki"
+            title="Nadchodzące"
+            action={<Link to="/planer">Kalendarz</Link>}
+          />
+          {upcoming.length === 0 ? (
+            <p className="owner-compact-empty">Brak nadchodzących wydarzeń.</p>
+          ) : (
+            <div className="owner-upcoming-list">
+              {upcoming.map(({ reminder, occurrence }) => {
+                const pet = pets.find((item) => item.id === reminder.petId);
+                const badge = dateBadge(occurrence.toISOString().split("T")[0]);
+                return (
+                  <article key={reminder.id}>
+                    <span>{speciesEmoji(pet?.species || "")}</span>
+                    <div>
+                      <strong>{reminder.title}</strong>
+                      <small>{pet?.name || "Pupil"} · {reminder.time}</small>
+                    </div>
+                    <b className={badge.urgent ? "urgent" : ""}>{badge.text}</b>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
 
-        <div className="activity">
-          <ActivityItem
-            icon="vetIcon"
-            title="Kontrola weterynaryjna"
-            subtitle="Bożena • 2 godziny temu"
-            text="Wszystkie wyniki w normie. Zalecana zmiana karmy na lepszą."
-          />
-          <ActivityItem
-            icon="weightIcon"
-            title="Nowy pomiar wagi"
-            subtitle="Leo • Wczoraj, 18:30"
-            text="Waga: 4.5kg (+0.2kg). Cel osiągnięty w 80%."
-          />
-          <ActivityItem
-            icon="bookIcon"
-            title="Zaktualizowano książeczkę"
-            subtitle="Bożena • 2 dni temu"
-            text="Dodano certyfikat wścieklizny (ważny do 2025)."
-          />
-        </div>
-      </section>
-
-      <div className="about-banner" onClick={() => navigate("/main")}>
-        <div className="about-banner-text">
-          <strong>Poznaj Pet Companion</strong>
-          <span>Dowiedz się więcej o możliwościach aplikacji</span>
-        </div>
-        <span className="about-banner-arrow">›</span>
+        <section className="owner-dashboard-card">
+          <SectionHeading eyebrow="Kartoteki pupili" title="Ostatnia aktywność" />
+          {recentEntries.length === 0 ? (
+            <p className="owner-compact-empty">Nowe wpisy pojawią się w tym miejscu.</p>
+          ) : (
+            <div className="owner-activity-list">
+              {recentEntries.map((entry) => {
+                const pet = pets.find((item) => item.id === entry.petId);
+                return (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    onClick={() => navigate(`/pupile/${entry.petId}`)}
+                  >
+                    <span>{entryIcons[entry.recordType]}</span>
+                    <div>
+                      <strong>{entry.category}</strong>
+                      <small>
+                        {pet?.name || "Pupil"} ·{" "}
+                        {new Date(`${entry.date}T12:00:00`).toLocaleDateString("pl-PL")}
+                      </small>
+                    </div>
+                    <i>›</i>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </section>
       </div>
-    </div>
+
+      <button className="owner-about-banner" type="button" onClick={() => navigate("/main")}>
+        <div>
+          <strong>Poznaj Pet Companion</strong>
+          <span>Sprawdź wszystkie możliwości wspólnej opieki</span>
+        </div>
+        <i>›</i>
+      </button>
+    </main>
   );
-};
-
-/* ---------- COMPONENTS ---------- */
-
-const ActionCard = ({ icon, label, onClick }: { icon: IconName; label: string; onClick?: () => void }) => (
-  <div className="action-card" onClick={onClick}>
-    <div className="icon-wrap">
-      <Icon name={icon} size={22} color="#7a5666" />
-    </div>
-    <span>{label}</span>
-  </div>
-);
-
-interface UpcomingItemProps {
-  emoji?: string;
-  image?: string;
-  title: string;
-  subtitle: string;
-  badge: string;
-  badgeType?: string;
 }
 
-const UpcomingItem = ({ emoji, image, title, subtitle, badge, badgeType }: UpcomingItemProps) => (
-  <div className="upcoming">
-    {image
-      ? <img src={image} className="avatar" alt={title} />
-      : <div className="avatar avatar-emoji">{emoji ?? "🐾"}</div>
-    }
-    <div className="upcoming-text">
-      <strong>{title}</strong>
-      <p>{subtitle}</p>
+function SectionHeading({
+  eyebrow,
+  title,
+  action,
+}: {
+  eyebrow: string;
+  title: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="owner-section-heading">
+      <div>
+        <span>{eyebrow}</span>
+        <h2>{title}</h2>
+      </div>
+      {action}
     </div>
-    <span className={`badge ${badgeType || ""}`}>{badge}</span>
-  </div>
-);
+  );
+}
 
-const ActivityItem = ({ icon, title, subtitle, text }: { icon: IconName; title: string; subtitle: string; text: string }) => (
-  <div className="activity-item">
-    <div className="icon">
-      <Icon name={icon} size={20} color="#7a5666" />
-    </div>
-    <div>
+function QuickAction({
+  icon,
+  title,
+  description,
+  onClick,
+}: {
+  icon: IconName;
+  title: string;
+  description: string;
+  onClick: () => void;
+}) {
+  return (
+    <button type="button" onClick={onClick}>
+      <i><Icon name={icon} size={21} color="#d92c83" /></i>
       <strong>{title}</strong>
-      <p className="meta">{subtitle}</p>
-      <p className="body">{text}</p>
-    </div>
-  </div>
-);
-
-export default HomePage;
+      <small>{description}</small>
+    </button>
+  );
+}

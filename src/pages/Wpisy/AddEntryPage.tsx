@@ -56,7 +56,11 @@ export default function AddEntryPage() {
     return (
       <div className="add-entry-page">
         <div className="add-entry-header">
-          <h1>Nowy wpis</h1>
+          <div>
+            <span>Kartoteka zdrowia</span>
+            <h1>Nowy wpis</h1>
+            <p>Najpierw dodaj profil pupila, którego dotyczy wpis.</p>
+          </div>
         </div>
         <div className="no-pets">
           <span>🐾</span>
@@ -72,7 +76,11 @@ export default function AddEntryPage() {
   return (
     <div className="add-entry-page">
       <div className="add-entry-header">
-        <h1>Nowy wpis</h1>
+        <div>
+          <span>Kartoteka zdrowia</span>
+          <h1>Dodaj wpis</h1>
+          <p>Zapisz wizytę, szczepienie, lek, wynik badania lub pomiar.</p>
+        </div>
       </div>
 
       <form className="add-entry-form" onSubmit={handleSubmit}>

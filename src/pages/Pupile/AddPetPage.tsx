@@ -23,7 +23,11 @@ export default function AddPetPage() {
   return (
     <div className="add-pet-page">
       <div className="add-pet-header">
-        <h1>Nowy pupil</h1>
+        <div>
+          <span>Nowy profil</span>
+          <h1>Dodaj pupila</h1>
+          <p>Podstawowe dane wystarczą, aby rozpocząć prowadzenie kartoteki.</p>
+        </div>
       </div>
 
       <form className="add-pet-form" onSubmit={handleSubmit}>

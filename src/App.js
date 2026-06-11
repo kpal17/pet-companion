@@ -9,12 +9,17 @@ import PetsListPage from "./pages/Pupile/PetsListPage.tsx";
 import PetProfilePage from "./pages/Pupile/PetProfilePage.tsx";
 import AddEntryPage from "./pages/Wpisy/AddEntryPage.tsx";
 import AppLayout from "./components/AppLayout.tsx";
+import VetAppLayout from "./components/VetAppLayout.tsx";
 import PlannerPage from "./pages/PlannerPage.tsx";
 import OwnerVetPage from "./pages/OwnerVetPage.tsx";
 import {
   VetDashboardPage,
+  VetHistoryPage,
   VetLoginPage,
+  VetCalendarPage,
   VetPatientPage,
+  VetPatientsPage,
+  VetProfilePage,
   VetRegisterPage,
 } from "./pages/Vet/VetPortal.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
@@ -30,8 +35,14 @@ function App() {
         <Route path="/rejestracja" element={<LoginPage />} />
         <Route path="/vet/logowanie" element={<VetLoginPage />} />
         <Route path="/vet/rejestracja" element={<VetRegisterPage />} />
-        <Route path="/vet/dashboard" element={<VetDashboardPage />} />
-        <Route path="/vet/pacjent/:id" element={<VetPatientPage />} />
+        <Route element={<VetAppLayout />}>
+          <Route path="/vet/dashboard" element={<VetDashboardPage />} />
+          <Route path="/vet/pacjenci" element={<VetPatientsPage />} />
+          <Route path="/vet/pacjent/:id" element={<VetPatientPage />} />
+          <Route path="/vet/kalendarz" element={<VetCalendarPage />} />
+          <Route path="/vet/historia" element={<VetHistoryPage />} />
+          <Route path="/vet/profil" element={<VetProfilePage />} />
+        </Route>
         <Route element={<AppLayout />}>
           <Route path="/home" element={<HomePage />} />
           <Route path="/pupile" element={<PetsListPage />} />

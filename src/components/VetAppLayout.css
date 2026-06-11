@@ -1,0 +1,88 @@
+.app-shell--vet {
+  background: #f8f2f6;
+}
+
+.vet-shell__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: clamp(15px, 4.5vw, 21px);
+  letter-spacing: -0.6px;
+}
+
+.vet-shell__brand img {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 11px;
+  object-fit: cover;
+  clip-path: circle(47% at center);
+  box-shadow: 0 3px 9px rgba(213, 45, 126, 0.18);
+}
+
+.vet-shell__brand strong {
+  color: #c81f72;
+  font-weight: 800;
+}
+
+.app-shell--vet .app-shell__avatar,
+.app-shell--vet .app-shell__profile-avatar {
+  background: linear-gradient(145deg, #d72c80, #ef6da9);
+}
+
+.vet-shell__profile-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  object-fit: cover;
+  clip-path: circle(47% at center);
+}
+
+.vet-shell__profile-details {
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 13px;
+  background: #fff8fb;
+}
+
+.vet-shell__profile-details span,
+.vet-shell__profile-details strong,
+.vet-shell__profile-details small {
+  display: block;
+}
+
+.vet-shell__profile-details span {
+  color: #8b7c83;
+  font-size: 10px;
+}
+
+.vet-shell__profile-details strong {
+  margin-top: 2px;
+  color: #4f4448;
+  font-size: 12px;
+}
+
+.vet-shell__profile-details small {
+  margin-top: 4px;
+  color: #d92c83;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.app-shell--vet .app-shell__nav-item:nth-child(2) svg {
+  fill: currentColor;
+  stroke: none;
+}
+
+@media (max-width: 370px) {
+  .vet-shell__brand {
+    gap: 5px;
+    font-size: 14px;
+  }
+
+  .vet-shell__brand img {
+    width: 30px;
+    height: 30px;
+  }
+}

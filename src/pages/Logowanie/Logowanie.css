@@ -409,6 +409,13 @@
   font-weight: 800;
 }
 
+.vet-login-link > span img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  clip-path: circle(47% at center);
+}
+
 .vet-login-link strong,
 .vet-login-link small {
   display: block;

@@ -71,17 +71,17 @@ export default function PetProfilePage() {
 
   return (
     <div className="pet-profile-page">
-      <div className="profile-header">
-        <h1>{pet.name}</h1>
-      </div>
-
-      <div className="profile-hero">
-        <div className="profile-avatar">{speciesEmoji(pet.species)}</div>
-        <h2>{pet.name}</h2>
-        <span className="profile-species">{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</span>
-      </div>
-
       <div className="profile-content">
+        <section className="profile-hero">
+          <div className="profile-avatar">{speciesEmoji(pet.species)}</div>
+          <div>
+            <span className="profile-eyebrow">Profil pupila</span>
+            <h2>{pet.name}</h2>
+            <span className="profile-species">{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</span>
+          </div>
+          <strong>{pet.weight ? `${pet.weight} kg` : computeAge(pet.birthDate)}</strong>
+        </section>
+
         <div className="info-card">
           <h3>Podstawowe informacje</h3>
           <div className="info-grid">

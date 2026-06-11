@@ -5,6 +5,7 @@ import { Icon } from "../../Icon.tsx";
 import { useAuth } from "../../context/AuthContext.tsx";
 import imgLogo from "./00e9533793b01d90c34b50db08b84853998152cb.png";
 import imgGoogle from "./74278594c1cfa9698502b9bedd64094874d20732.png";
+import vetLogo from "../Vet/vet-logo.png";
 
 export default function Logowanie() {
   const navigate = useNavigate();
@@ -140,7 +141,9 @@ export default function Logowanie() {
             </div>
 
             <Link to="/vet/logowanie" className="vet-login-link">
-              <span>✚</span>
+              <span>
+                <img src={vetLogo} alt="" aria-hidden="true" />
+              </span>
               <div>
                 <strong>Pet Companion VET</strong>
                 <small>Logowanie dla weterynarzy</small>
