@@ -47,19 +47,17 @@ export default function Logowanie() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-    setTimeout(() => {
-      const ok = login(email, password);
-      if (ok) {
-        navigate("/home");
-      } else {
-        setError("Nieprawidłowy email lub hasło");
-        setIsLoading(false);
-      }
-    }, 600);
+    const ok = await login(email, password);
+    if (ok) {
+      navigate("/home");
+    } else {
+      setError("Nieprawidłowy email lub hasło");
+      setIsLoading(false);
+    }
   };
 
   return (

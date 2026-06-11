@@ -1,9 +1,17 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../firebase.ts";
 
 type User = {
+  uid: string;
   name: string;
   email: string;
-  password: string;
 };
 
 export type Pet = {
@@ -97,8 +105,8 @@ export type VetActivity = {
 
 type AuthContextType = {
   currentUser: User | null;
-  register: (name: string, email: string, password: string) => void;
-  login: (email: string, password: string) => boolean;
+  register: (name: string, email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   pets: Pet[];
   addPet: (pet: Omit<Pet, "id">) => void;
@@ -134,7 +142,6 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [pets, setPets] = useState<Pet[]>([]);
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -146,22 +153,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [vetGrants, setVetGrants] = useState<VetGrant[]>([]);
   const [vetActivities, setVetActivities] = useState<VetActivity[]>([]);
 
-  const register = (name: string, email: string, password: string) => {
-    const user = { name, email, password };
-    setUsers((prev) => [...prev, user]);
-    setCurrentUser(user);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setCurrentUser({
+          uid: firebaseUser.uid,
+          name: firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "Użytkownik",
+          email: firebaseUser.email || "",
+        });
+      } else {
+        setCurrentUser(null);
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  const register = async (name: string, email: string, password: string) => {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName: name });
+    setCurrentUser({ uid: cred.user.uid, name, email });
   };
 
-  const login = (email: string, password: string): boolean => {
-    const user = users.find((u) => u.email === email && u.password === password);
-    if (user) {
-      setCurrentUser(user);
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
       return true;
+    } catch (err: any) {
+      console.error("Firebase login error:", err.code, err.message);
+      return false;
     }
-    return false;
   };
 
-  const logout = () => setCurrentUser(null);
+  const logout = () => { signOut(auth); setCurrentUser(null); };
 
   const addPet = (petData: Omit<Pet, "id">) => {
     setPets((prev) => [...prev, { ...petData, id: String(Date.now()) }]);

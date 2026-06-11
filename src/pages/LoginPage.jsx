@@ -14,10 +14,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    register(name, email, password);
-    navigate("/home");
+    try {
+      await register(name, email, password);
+      navigate("/home");
+    } catch (err) {
+      alert("Błąd rejestracji: " + err.message);
+    }
   };
 
   return (

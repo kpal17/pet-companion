@@ -14,15 +14,25 @@ const RegisterPage: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     if (password !== confirmPassword) {
       setError("Hasła nie są takie same.");
       return;
     }
-    register(name, email, password);
-    navigate("/home");
+    try {
+      await register(name, email, password);
+      navigate("/home");
+    } catch (err: any) {
+      if (err.code === "auth/email-already-in-use") {
+        setError("Ten adres email jest już zajęty.");
+      } else if (err.code === "auth/weak-password") {
+        setError("Hasło musi mieć co najmniej 6 znaków.");
+      } else {
+        setError("Wystąpił błąd podczas rejestracji. Spróbuj ponownie.");
+      }
+    }
   };
 
   return (
