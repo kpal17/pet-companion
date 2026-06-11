@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import "./HomePage.css";
 
 import { Icon } from "../../Icon.tsx";
-import { useAuth, type Entry } from "../../context/AuthContext.tsx";
-import { dateBadge, speciesEmoji } from "../Pupile/petUtils.ts";
+import { useAuth } from "../../context/AuthContext.tsx";
+import PetAvatar from "../Pupile/PetAvatar.tsx";
+import { dateBadge } from "../Pupile/petUtils.ts";
 import { IconName } from "./assets/icons.ts";
 
 function nextReminderDate(date: string, recurrence: string) {
@@ -26,14 +27,6 @@ function nextReminderDate(date: string, recurrence: string) {
 
   return occurrence >= today ? occurrence : null;
 }
-
-const entryIcons: Record<Entry["recordType"], string> = {
-  vaccination: "💉",
-  visit: "🩺",
-  medication: "💊",
-  measurement: "📋",
-  other: "📎",
-};
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -123,7 +116,7 @@ export default function HomePage() {
               const nextEvent = upcoming.find((item) => item.reminder.petId === pet.id);
               return (
                 <button key={pet.id} type="button" onClick={() => navigate(`/pupile/${pet.id}`)}>
-                  <span>{speciesEmoji(pet.species)}</span>
+                  <PetAvatar pet={pet} />
                   <div>
                     <strong>{pet.name}</strong>
                     <small>{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</small>
@@ -157,7 +150,7 @@ export default function HomePage() {
                 const badge = dateBadge(occurrence.toISOString().split("T")[0]);
                 return (
                   <article key={reminder.id}>
-                    <span>{speciesEmoji(pet?.species || "")}</span>
+                    <PetAvatar pet={pet} />
                     <div>
                       <strong>{reminder.title}</strong>
                       <small>{pet?.name || "Pupil"} · {reminder.time}</small>
@@ -184,7 +177,7 @@ export default function HomePage() {
                     type="button"
                     onClick={() => navigate(`/pupile/${entry.petId}`)}
                   >
-                    <span>{entryIcons[entry.recordType]}</span>
+                    <PetAvatar pet={pet} />
                     <div>
                       <strong>{entry.category}</strong>
                       <small>

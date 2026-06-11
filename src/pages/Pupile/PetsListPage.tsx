@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
-import { speciesEmoji } from "./petUtils.ts";
+import PetAvatar from "./PetAvatar.tsx";
 import "./PetsListPage.css";
 
 export default function PetsListPage() {
@@ -39,7 +39,7 @@ export default function PetsListPage() {
                 className="pet-card"
                 onClick={() => navigate(`/pupile/${pet.id}`)}
               >
-                <div className="pet-avatar">{speciesEmoji(pet.species)}</div>
+                <PetAvatar pet={pet} className="pet-avatar" />
                 <div className="pet-info">
                   <strong>{pet.name}</strong>
                   <span>{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</span>

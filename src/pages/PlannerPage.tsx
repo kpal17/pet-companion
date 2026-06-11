@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useAuth, type Reminder } from "../context/AuthContext.tsx";
-import { speciesEmoji } from "./Pupile/petUtils.ts";
+import PetAvatar from "./Pupile/PetAvatar.tsx";
 import "./PlannerPage.css";
 
 const categoryLabels: Record<Reminder["category"], string> = {
@@ -304,9 +304,10 @@ export default function PlannerPage() {
               const pet = pets.find((item) => item.id === reminder.petId);
               return (
                 <article className="planner-event" key={reminder.id}>
-                  <div className={`planner-event-icon planner-event-icon-${reminder.category}`}>
-                    {speciesEmoji(pet?.species || "")}
-                  </div>
+                  <PetAvatar
+                    pet={pet}
+                    className={`planner-event-icon planner-event-icon-${reminder.category}`}
+                  />
                   <div className="planner-event-content">
                     <span>{categoryLabels[reminder.category]} · {pet?.name}</span>
                     <h3>{reminder.title}</h3>

@@ -509,7 +509,7 @@
   gap: 14px;
 }
 
-.vet-patient-hero > div {
+.vet-patient-hero > .pet-photo-avatar {
   width: 70px;
   height: 70px;
   display: grid;
@@ -633,7 +633,7 @@
     grid-template-columns: 58px minmax(0, 1fr);
   }
 
-  .vet-patient-hero > div {
+  .vet-patient-hero > .pet-photo-avatar {
     width: 58px;
     height: 58px;
   }
@@ -810,7 +810,17 @@
 }
 
 .vet-activity-list article {
-  grid-template-columns: 12px minmax(0, 1fr);
+  grid-template-columns: 36px minmax(0, 1fr);
+}
+
+.vet-activity-pet-avatar {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #fff0f7;
+  font-size: 18px;
 }
 
 .vet-activity-icon {
@@ -1048,6 +1058,12 @@
 }
 
 .vet-calendar-group article > span {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #fff0f7;
   font-size: 24px;
   text-align: center;
 }
@@ -1099,7 +1115,8 @@
 .vet-history-list article {
   padding: 15px 0;
   display: grid;
-  grid-template-columns: 14px minmax(0, 1fr);
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: start;
   gap: 13px;
   border-top: 1px solid #f0e7eb;
 }
@@ -1108,8 +1125,9 @@
   border-top: 0;
 }
 
-.vet-history-list .vet-activity-icon {
-  margin-top: 5px;
+.vet-history-list .vet-activity-pet-avatar {
+  width: 40px;
+  height: 40px;
 }
 
 .vet-history-list h2 {

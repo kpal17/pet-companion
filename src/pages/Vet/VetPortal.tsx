@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useAuth, type Reminder, type VetActivity } from "../../context/AuthContext.tsx";
-import { computeAge, dateBadge, speciesEmoji } from "../Pupile/petUtils.ts";
+import PetAvatar from "../Pupile/PetAvatar.tsx";
+import { computeAge, dateBadge } from "../Pupile/petUtils.ts";
 import vetLogo from "./vet-logo.png";
 import "./VetPortal.css";
 
@@ -423,7 +424,7 @@ export function VetDashboardPage() {
               const lastActivity = activities.find((activity) => activity.petId === pet.id);
               return (
                 <button key={pet.id} type="button" onClick={() => navigate(`/vet/pacjent/${pet.id}`)}>
-                  <span>{speciesEmoji(pet.species)}</span>
+                  <PetAvatar pet={pet} />
                   <div>
                     <strong>{pet.name}</strong>
                     <small>{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</small>
@@ -455,7 +456,7 @@ export function VetDashboardPage() {
                 const badge = dateBadge(occurrence.toISOString().split("T")[0]);
                 return (
                   <article key={reminder.id}>
-                    <span>{speciesEmoji(pet?.species || "")}</span>
+                    <PetAvatar pet={pet} />
                     <div>
                       <strong>{reminder.title}</strong>
                       <small>{pet?.name} · {reminder.time}</small>
@@ -484,7 +485,7 @@ export function VetDashboardPage() {
                 const pet = pets.find((item) => item.id === activity.petId);
                 return (
                   <article key={activity.id}>
-                    <span className={`vet-activity-icon vet-activity-icon--${activity.type}`} />
+                    <PetAvatar pet={pet} className="vet-activity-pet-avatar" />
                     <div>
                       <strong>{activityLabels[activity.type]}</strong>
                       <small>{pet?.name || "Pupil"} · {formatActivityDate(activity.createdAt)}</small>
@@ -564,7 +565,7 @@ export function VetPatientsPage() {
             return (
               <article key={pet.id}>
                 <button type="button" onClick={() => navigate(`/vet/pacjent/${pet.id}`)}>
-                  <span>{speciesEmoji(pet.species)}</span>
+                  <PetAvatar pet={pet} />
                   <div>
                     <h2>{pet.name}</h2>
                     <p>{pet.species}{pet.breed ? ` · ${pet.breed}` : ""} · {computeAge(pet.birthDate)}</p>
@@ -651,7 +652,7 @@ export function VetCalendarPage() {
                   <strong>{occurrence.getDate()}</strong>
                   <span>{occurrence.toLocaleDateString("pl-PL", { weekday: "short" })}</span>
                 </time>
-                <span>{speciesEmoji(pet?.species || "")}</span>
+                <PetAvatar pet={pet} />
                 <div>
                   <h3>{reminder.title}</h3>
                   <p>{pet?.name} · {reminder.time}</p>
@@ -719,7 +720,7 @@ export function VetHistoryPage() {
             const pet = pets.find((item) => item.id === activity.petId);
             return (
               <article key={activity.id}>
-                <span className={`vet-activity-icon vet-activity-icon--${activity.type}`} />
+                <PetAvatar pet={pet} className="vet-activity-pet-avatar" />
                 <div>
                   <h2>{activityLabels[activity.type]}</h2>
                   <p>{activity.description}</p>
@@ -876,7 +877,7 @@ export function VetPatientPage() {
   return (
     <main className="vet-patient-page">
         <section className="vet-patient-hero">
-          <div>{speciesEmoji(pet.species)}</div>
+          <PetAvatar pet={pet} />
           <span>
             <h1>{pet.name}</h1>
             <p>{pet.species}{pet.breed ? ` · ${pet.breed}` : ""} · {computeAge(pet.birthDate)}</p>

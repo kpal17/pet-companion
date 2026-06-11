@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.tsx";
-import { speciesEmoji } from "./Pupile/petUtils.ts";
+import PetAvatar from "./Pupile/PetAvatar.tsx";
 import "./OwnerVetPage.css";
 
 export default function OwnerVetPage() {
@@ -54,7 +54,7 @@ export default function OwnerVetPage() {
               const grants = vetGrants.filter((grant) => grant.petId === pet.id && !grant.revoked);
               return (
                 <button type="button" key={pet.id} onClick={() => navigate(`/pupile/${pet.id}`)}>
-                  <span>{speciesEmoji(pet.species)}</span>
+                  <PetAvatar pet={pet} />
                   <div>
                     <strong>{pet.name}</strong>
                     <small>

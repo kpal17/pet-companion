@@ -13,6 +13,7 @@ export type Pet = {
   breed: string;
   birthDate: string;
   weight: string;
+  photo?: string;
 };
 
 export type Entry = {

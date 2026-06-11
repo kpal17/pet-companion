@@ -1,8 +1,42 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
+import PetAvatar from "./PetAvatar.tsx";
 import { SPECIES_OPTIONS } from "./petUtils.ts";
 import "./AddPetPage.css";
+
+const MAX_PHOTO_SIZE = 8 * 1024 * 1024;
+const PHOTO_EDGE = 720;
+
+function preparePetPhoto(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onerror = () => reject(new Error("Nie udało się odczytać zdjęcia."));
+    reader.onload = () => {
+      const image = new Image();
+      image.onerror = () => reject(new Error("Wybrany plik nie jest prawidłowym zdjęciem."));
+      image.onload = () => {
+        const scale = Math.min(1, PHOTO_EDGE / Math.max(image.width, image.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+
+        const context = canvas.getContext("2d");
+        if (!context) {
+          reject(new Error("Nie udało się przygotować zdjęcia."));
+          return;
+        }
+
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", 0.82));
+      };
+      image.src = String(reader.result);
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
 
 export default function AddPetPage() {
   const navigate = useNavigate();
@@ -13,11 +47,41 @@ export default function AddPetPage() {
   const [breed, setBreed] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [weight, setWeight] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [photoError, setPhotoError] = useState("");
+  const [isPreparingPhoto, setIsPreparingPhoto] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addPet({ name, species, breed, birthDate, weight });
+    addPet({ name, species, breed, birthDate, weight, photo: photo || undefined });
     navigate("/pupile");
+  };
+
+  const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setPhotoError("");
+    if (!file.type.startsWith("image/")) {
+      setPhotoError("Wybierz plik graficzny.");
+      event.target.value = "";
+      return;
+    }
+    if (file.size > MAX_PHOTO_SIZE) {
+      setPhotoError("Zdjęcie może mieć maksymalnie 8 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setIsPreparingPhoto(true);
+    try {
+      setPhoto(await preparePetPhoto(file));
+    } catch (error) {
+      setPhotoError(error instanceof Error ? error.message : "Nie udało się dodać zdjęcia.");
+      event.target.value = "";
+    } finally {
+      setIsPreparingPhoto(false);
+    }
   };
 
   return (
@@ -31,6 +95,33 @@ export default function AddPetPage() {
       </div>
 
       <form className="add-pet-form" onSubmit={handleSubmit}>
+        <div className="pet-photo-field">
+          <PetAvatar
+            pet={{ name: name || "nowego pupila", species, photo: photo || undefined }}
+            className="pet-photo-preview"
+          />
+          <div>
+            <label className="pet-photo-button" htmlFor="pet-photo">
+              {photo ? "Wybierz inne zdjęcie" : "Dodaj zdjęcie pupila"}
+            </label>
+            <input
+              id="pet-photo"
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              disabled={isPreparingPhoto}
+            />
+            <p>Opcjonalnie. Wybierz zdjęcie z urządzenia, maksymalnie 8 MB.</p>
+            {isPreparingPhoto && <span className="pet-photo-status">Przygotowuję zdjęcie...</span>}
+            {photoError && <span className="pet-photo-error">{photoError}</span>}
+            {photo && (
+              <button type="button" className="pet-photo-remove" onClick={() => setPhoto("")}>
+                Usuń zdjęcie
+              </button>
+            )}
+          </div>
+        </div>
+
         <div className="form-field">
           <label htmlFor="pet-name">Imię pupila</label>
           <input
@@ -90,7 +181,7 @@ export default function AddPetPage() {
           />
         </div>
 
-        <button type="submit" className="submit-btn">
+        <button type="submit" className="submit-btn" disabled={isPreparingPhoto}>
           Dodaj pupila
         </button>
       </form>

@@ -1,0 +1,15 @@
+.pet-photo-avatar {
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.pet-photo-avatar.has-photo {
+  padding: 0;
+}
+
+.pet-photo-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}

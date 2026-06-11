@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
-import { speciesEmoji, computeAge, dateBadge } from "./petUtils.ts";
+import PetAvatar from "./PetAvatar.tsx";
+import { computeAge, dateBadge } from "./petUtils.ts";
 import "./PetProfilePage.css";
 
 export default function PetProfilePage() {
@@ -73,7 +74,7 @@ export default function PetProfilePage() {
     <div className="pet-profile-page">
       <div className="profile-content">
         <section className="profile-hero">
-          <div className="profile-avatar">{speciesEmoji(pet.species)}</div>
+          <PetAvatar pet={pet} className="profile-avatar" />
           <div>
             <span className="profile-eyebrow">Profil pupila</span>
             <h2>{pet.name}</h2>
