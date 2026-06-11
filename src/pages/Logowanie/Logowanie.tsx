@@ -188,6 +188,11 @@ export default function Logowanie() {
               Zarejestruj się
             </Link>
           </p>
+          <p className="login-footer-reg">
+            <Link to="/main" className="login-footer-link">
+              Poznaj Pet Companion →
+            </Link>
+          </p>
           <p className="login-footer-consent">
             Tworząc konto akceptujesz{" "}
             <a href="#terms">Regulamin</a> i{" "}

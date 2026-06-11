@@ -4,6 +4,7 @@ import "./Main.css";
 import svgPaths from "./svg-pwuchm5klk.ts";
 import imgMedicalDashboard from "./d572a38628d70d45fb50fce0ac77c75b8c9996d3.jpg";
 import imgHappyPets from "./326f839bfe14561b9a66ff807b7864acac95afb8.jpg";
+import imgAnimals from "./animals.jpg";
 import imgLogo from "./00e9533793b01d90c34b50db08b84853998152cb.png";
 
 // ── Shared ────────────────────────────────────────────────────────────────────
@@ -171,6 +172,11 @@ function FeaturesSection() {
             }
             title="Obsługa wielu zwierząt"
             description="Niezależnie od tego, czy masz jednego chomika, czy dom pełen dogów niemieckich, zarządzaj każdym profilem z indywidualnymi planami opieki i harmonogramami."
+            visual={
+              <div className="dashboard-preview">
+                <img src={imgAnimals} alt="Różne zwierzęta" />
+              </div>
+            }
           />
         </div>
       </div>

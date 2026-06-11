@@ -194,13 +194,6 @@ export default function HomePage() {
         </section>
       </div>
 
-      <button className="owner-about-banner" type="button" onClick={() => navigate("/main")}>
-        <div>
-          <strong>Poznaj Pet Companion</strong>
-          <span>Sprawdź wszystkie możliwości wspólnej opieki</span>
-        </div>
-        <i>›</i>
-      </button>
     </main>
   );
 }
