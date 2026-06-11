@@ -205,8 +205,7 @@ export function VetRegisterPage() {
             </label>
           </fieldset>
           <label className="vet-consent">
-            <input type="checkbox" required />
-            Akceptuję regulamin świadczenia usług i zasady dostępu do danych medycznych.
+            <span><input type="checkbox" required />{" "}Akceptuję regulamin świadczenia usług i zasady dostępu do danych medycznych.</span>
           </label>
           <button className="vet-primary-button" type="submit">Załóż profil zawodowy</button>
           <p className="vet-auth-switch">

@@ -192,6 +192,9 @@
   font-size: 11px;
   line-height: 1.45;
 }
+.vet-consent input[type="checkbox"] {
+  margin-right: 8px;
+}
 
 .vet-primary-button {
   min-height: 52px;
