@@ -111,6 +111,8 @@ type AuthContextType = {
   logout: () => void;
   pets: Pet[];
   addPet: (pet: Omit<Pet, "id">) => void;
+  updatePet: (id: string, pet: Omit<Pet, "id">) => void;
+  deletePet: (id: string) => void;
   entries: Entry[];
   addEntry: (entry: Omit<Entry, "id">) => void;
   reminders: Reminder[];
@@ -189,6 +191,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const addPet = (petData: Omit<Pet, "id">) => {
     setPets((prev) => [...prev, { ...petData, id: String(Date.now()) }]);
+  };
+
+  const updatePet = (id: string, petData: Omit<Pet, "id">) => {
+    setPets((prev) =>
+      prev.map((pet) => pet.id === id ? { ...petData, id } : pet),
+    );
+  };
+
+  const deletePet = (id: string) => {
+    setPets((prev) => prev.filter((pet) => pet.id !== id));
+    setEntries((prev) => prev.filter((entry) => entry.petId !== id));
+    setReminders((prev) => prev.filter((reminder) => reminder.petId !== id));
+    setPetShares((prev) => prev.filter((share) => share.petId !== id));
+    setVetAccessCodes((prev) => prev.filter((code) => code.petId !== id));
+    setVetGrants((prev) => prev.filter((grant) => grant.petId !== id));
+    setVetActivities((prev) => prev.filter((activity) => activity.petId !== id));
   };
 
   const addEntry = (entryData: Omit<Entry, "id">) => {
@@ -382,6 +400,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         pets,
         addPet,
+        updatePet,
+        deletePet,
         entries,
         addEntry,
         reminders,

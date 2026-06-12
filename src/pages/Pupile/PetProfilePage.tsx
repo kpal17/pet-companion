@@ -2,14 +2,47 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
 import PetAvatar from "./PetAvatar.tsx";
-import { computeAge, dateBadge } from "./petUtils.ts";
+import { computeAge, dateBadge, SPECIES_OPTIONS } from "./petUtils.ts";
 import "./PetProfilePage.css";
+
+const MAX_PHOTO_SIZE = 8 * 1024 * 1024;
+const PHOTO_EDGE = 720;
+
+function preparePetPhoto(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onerror = () => reject(new Error("Nie udało się odczytać zdjęcia."));
+    reader.onload = () => {
+      const image = new Image();
+      image.onerror = () => reject(new Error("Wybrany plik nie jest prawidłowym zdjęciem."));
+      image.onload = () => {
+        const scale = Math.min(1, PHOTO_EDGE / Math.max(image.width, image.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          reject(new Error("Nie udało się przygotować zdjęcia."));
+          return;
+        }
+
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", 0.82));
+      };
+      image.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 export default function PetProfilePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
     addPetShare,
+    deletePet,
     generateVetAccessCode,
     entries,
     petShares,
@@ -21,10 +54,15 @@ export default function PetProfilePage() {
     vetAccessCodes,
     vetGrants,
     vetUsers,
+    updatePet,
   } = useAuth();
   const [shareEmail, setShareEmail] = useState("");
   const [shareRole, setShareRole] = useState<"vet" | "caregiver">("caregiver");
   const [codeUsageLimit, setCodeUsageLimit] = useState(1);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isPreparingPhoto, setIsPreparingPhoto] = useState(false);
+  const [photoError, setPhotoError] = useState("");
 
   const pet = pets.find((p) => p.id === id);
   const petEntries = entries
@@ -45,11 +83,85 @@ export default function PetProfilePage() {
   );
   const activeVetGrants = vetGrants.filter((grant) => grant.petId === id && !grant.revoked);
 
+  const [editForm, setEditForm] = useState({
+    name: pet?.name || "",
+    species: pet?.species || SPECIES_OPTIONS[0],
+    breed: pet?.breed || "",
+    birthDate: pet?.birthDate || "",
+    weight: pet?.weight || "",
+    microchipNumber: pet?.microchipNumber || "",
+    photo: pet?.photo || "",
+  });
+
   const submitShare = (event: React.FormEvent) => {
     event.preventDefault();
     if (!id || !shareEmail.trim()) return;
     addPetShare({ petId: id, email: shareEmail.trim(), role: shareRole });
     setShareEmail("");
+  };
+
+  const openEdit = () => {
+    if (!pet) return;
+    setEditForm({
+      name: pet.name,
+      species: pet.species,
+      breed: pet.breed,
+      birthDate: pet.birthDate,
+      weight: pet.weight,
+      microchipNumber: pet.microchipNumber || "",
+      photo: pet.photo || "",
+    });
+    setPhotoError("");
+    setIsEditing(true);
+  };
+
+  const submitEdit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!pet || !editForm.name.trim() || isPreparingPhoto) return;
+    updatePet(pet.id, {
+      name: editForm.name.trim(),
+      species: editForm.species,
+      breed: editForm.breed.trim(),
+      birthDate: editForm.birthDate,
+      weight: editForm.weight,
+      microchipNumber: editForm.microchipNumber || undefined,
+      photo: editForm.photo || undefined,
+    });
+    setIsEditing(false);
+  };
+
+  const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setPhotoError("");
+    if (!file.type.startsWith("image/")) {
+      setPhotoError("Wybierz plik graficzny.");
+      event.target.value = "";
+      return;
+    }
+    if (file.size > MAX_PHOTO_SIZE) {
+      setPhotoError("Zdjęcie może mieć maksymalnie 8 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setIsPreparingPhoto(true);
+    try {
+      const photo = await preparePetPhoto(file);
+      setEditForm((current) => ({ ...current, photo }));
+    } catch (error) {
+      setPhotoError(error instanceof Error ? error.message : "Nie udało się dodać zdjęcia.");
+      event.target.value = "";
+    } finally {
+      setIsPreparingPhoto(false);
+    }
+  };
+
+  const confirmDelete = () => {
+    if (!pet) return;
+    deletePet(pet.id);
+    navigate("/pupile", { replace: true });
   };
 
   if (!pet) {
@@ -81,7 +193,10 @@ export default function PetProfilePage() {
             <h2>{pet.name}</h2>
             <span className="profile-species">{pet.species}{pet.breed ? ` · ${pet.breed}` : ""}</span>
           </div>
-          <strong>{pet.weight ? `${pet.weight} kg` : computeAge(pet.birthDate)}</strong>
+          <div className="profile-hero-actions">
+            <strong>{pet.weight ? `${pet.weight} kg` : computeAge(pet.birthDate)}</strong>
+            <button type="button" onClick={openEdit}>Edytuj profil</button>
+          </div>
         </section>
 
         <div className="info-card">
@@ -354,7 +469,135 @@ export default function PetProfilePage() {
             </div>
           )}
         </div>
+
+        <div className="profile-danger-zone">
+          <div>
+            <strong>Usuń profil pupila</strong>
+            <p>Usunięte zostaną także wpisy, przypomnienia i udzielone dostępy dotyczące {pet.name}.</p>
+          </div>
+          <button type="button" onClick={() => setIsDeleting(true)}>Usuń profil</button>
+        </div>
       </div>
+
+      {isEditing && (
+        <div className="pet-profile-modal" role="dialog" aria-modal="true" aria-labelledby="edit-pet-title">
+          <button className="pet-profile-modal__backdrop" type="button" aria-label="Zamknij edycję" onClick={() => setIsEditing(false)} />
+          <form className="pet-profile-modal__card pet-edit-form" onSubmit={submitEdit}>
+            <div className="pet-profile-modal__heading">
+              <div>
+                <span>Profil pupila</span>
+                <h2 id="edit-pet-title">Edytuj dane</h2>
+              </div>
+              <button type="button" aria-label="Zamknij" onClick={() => setIsEditing(false)}>×</button>
+            </div>
+
+            <div className="pet-edit-photo">
+              <PetAvatar
+                pet={{ name: editForm.name || pet.name, species: editForm.species, photo: editForm.photo || undefined }}
+                className="pet-edit-photo__preview"
+              />
+              <div>
+                <label htmlFor="edit-pet-photo">
+                  {editForm.photo ? "Zmień zdjęcie" : "Dodaj zdjęcie"}
+                </label>
+                <input id="edit-pet-photo" type="file" accept="image/*" onChange={handlePhotoChange} disabled={isPreparingPhoto} />
+                {isPreparingPhoto && <span>Przygotowuję zdjęcie...</span>}
+                {photoError && <span className="pet-edit-photo__error">{photoError}</span>}
+                {editForm.photo && (
+                  <button type="button" onClick={() => setEditForm((current) => ({ ...current, photo: "" }))}>
+                    Usuń zdjęcie
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="pet-edit-form__fields">
+              <label>
+                Imię pupila
+                <input
+                  type="text"
+                  value={editForm.name}
+                  onChange={(event) => setEditForm((current) => ({ ...current, name: event.target.value }))}
+                  required
+                />
+              </label>
+              <label>
+                Gatunek
+                <select
+                  value={editForm.species}
+                  onChange={(event) => setEditForm((current) => ({ ...current, species: event.target.value }))}
+                >
+                  {SPECIES_OPTIONS.map((species) => <option key={species}>{species}</option>)}
+                </select>
+              </label>
+              <label>
+                Rasa <span>(opcjonalnie)</span>
+                <input
+                  type="text"
+                  value={editForm.breed}
+                  onChange={(event) => setEditForm((current) => ({ ...current, breed: event.target.value }))}
+                />
+              </label>
+              <label>
+                Data urodzenia <span>(opcjonalnie)</span>
+                <input
+                  type="date"
+                  value={editForm.birthDate}
+                  onChange={(event) => setEditForm((current) => ({ ...current, birthDate: event.target.value }))}
+                />
+              </label>
+              <label>
+                Waga (kg) <span>(opcjonalnie)</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value={editForm.weight}
+                  onChange={(event) => setEditForm((current) => ({ ...current, weight: event.target.value }))}
+                />
+              </label>
+              <label>
+                Numer mikroczipa <span>(opcjonalnie)</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]{15}"
+                  maxLength={15}
+                  title="Numer mikroczipa musi składać się dokładnie z 15 cyfr."
+                  value={editForm.microchipNumber}
+                  onChange={(event) => setEditForm((current) => ({
+                    ...current,
+                    microchipNumber: event.target.value.replace(/\D/g, "").slice(0, 15),
+                  }))}
+                />
+              </label>
+            </div>
+
+            <div className="pet-profile-modal__actions">
+              <button type="button" onClick={() => setIsEditing(false)}>Anuluj</button>
+              <button type="submit" disabled={isPreparingPhoto}>Zapisz zmiany</button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {isDeleting && (
+        <div className="pet-profile-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-pet-title">
+          <button className="pet-profile-modal__backdrop" type="button" aria-label="Anuluj usuwanie" onClick={() => setIsDeleting(false)} />
+          <div className="pet-profile-modal__card pet-delete-dialog">
+            <div className="pet-delete-dialog__icon">!</div>
+            <h2 id="delete-pet-title">Usunąć profil {pet.name}?</h2>
+            <p>
+              Tej operacji nie można cofnąć. Historia medyczna, przypomnienia,
+              udostępnienia i dostępy VET tego pupila również zostaną usunięte.
+            </p>
+            <div className="pet-profile-modal__actions">
+              <button type="button" onClick={() => setIsDeleting(false)}>Anuluj</button>
+              <button type="button" className="pet-delete-confirm" onClick={confirmDelete}>Usuń bezpowrotnie</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
