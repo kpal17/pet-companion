@@ -671,15 +671,17 @@
 
 .vet-quick-actions button {
   min-width: 0;
+  min-height: 142px;
   padding: 16px 14px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #f0e3e9;
   border-radius: 17px;
   background: #fff9fc;
   color: #44363d;
-  text-align: left;
+  text-align: center;
   transition: border-color 0.15s ease, transform 0.15s ease;
 }
 
@@ -692,6 +694,7 @@
   width: 38px;
   height: 38px;
   margin-bottom: 11px;
+  flex: 0 0 auto;
   display: grid;
   place-items: center;
   border-radius: 12px;
@@ -700,6 +703,11 @@
   font-size: 19px;
   font-style: normal;
   font-weight: 700;
+  line-height: 1;
+}
+
+.vet-quick-actions i svg {
+  display: block;
 }
 
 .vet-quick-actions strong,
@@ -715,12 +723,14 @@
 
 .vet-quick-actions strong {
   font-size: 13px;
+  line-height: 1.25;
 }
 
 .vet-quick-actions small {
   margin-top: 3px;
   color: #96878e;
   font-size: 9px;
+  line-height: 1.35;
 }
 
 .vet-recent-patients {
@@ -1225,6 +1235,7 @@
   }
 
   .vet-quick-actions button {
+    min-height: 108px;
     padding: 12px 9px;
   }
 
