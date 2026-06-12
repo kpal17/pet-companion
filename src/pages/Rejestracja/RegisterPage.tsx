@@ -117,10 +117,24 @@ const RegisterPage: React.FC = () => {
         </p>
       </form>
 
-      <p className="footer">
-        Tworząc konto akceptujesz <strong>Regulamin</strong> i{" "}
-        <strong>Politykę prywatności</strong>
-      </p>
+      <div className="register-footer">
+        <p className="register-main-link">
+          <Link to="/main">Poznaj Pet Companion →</Link>
+        </p>
+        <p className="footer">
+          Tworząc konto akceptujesz{" "}
+          <Link to="/rejestracja#regulamin">Regulamin</Link> i{" "}
+          <Link to="/rejestracja#polityka-prywatnosci">Politykę prywatności</Link>
+        </p>
+        <p className="register-copyright">
+          © 2026 Pet Companion. Dbamy o każdą łapkę
+        </p>
+        <div className="register-footer-links">
+          <Link to="/rejestracja#polityka-prywatnosci">Prywatność</Link>
+          <Link to="/rejestracja#regulamin">Regulamin</Link>
+          <Link to="/rejestracja#kontakt">Kontakt</Link>
+        </div>
+      </div>
     </div>
   );
 };

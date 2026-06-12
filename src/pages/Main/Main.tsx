@@ -2,9 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Main.css";
 import svgPaths from "./svg-pwuchm5klk.ts";
-import imgMedicalDashboard from "./d572a38628d70d45fb50fce0ac77c75b8c9996d3.jpg";
-import imgHappyPets from "./326f839bfe14561b9a66ff807b7864acac95afb8.jpg";
-import imgAnimals from "./animals.jpg";
+import imgMedicalDashboard from "./pets-at-vet.png";
+import imgHappyPets from "./landing.jpg";
+import imgAnimals from "./multiple-pets.jpg";
 import imgLogo from "./00e9533793b01d90c34b50db08b84853998152cb.png";
 
 // ── Shared ────────────────────────────────────────────────────────────────────

@@ -47,13 +47,22 @@ export default function AddPetPage() {
   const [breed, setBreed] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [weight, setWeight] = useState("");
+  const [microchipNumber, setMicrochipNumber] = useState("");
   const [photo, setPhoto] = useState("");
   const [photoError, setPhotoError] = useState("");
   const [isPreparingPhoto, setIsPreparingPhoto] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addPet({ name, species, breed, birthDate, weight, photo: photo || undefined });
+    addPet({
+      name,
+      species,
+      breed,
+      birthDate,
+      weight,
+      microchipNumber: microchipNumber || undefined,
+      photo: photo || undefined,
+    });
     navigate("/pupile");
   };
 
@@ -178,6 +187,24 @@ export default function AddPetPage() {
             placeholder="np. 4.5"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
+          />
+        </div>
+
+        <div className="form-field">
+          <label htmlFor="pet-microchip">
+            Numer mikroczipa <span className="optional">(opcjonalnie)</span>
+          </label>
+          <input
+            id="pet-microchip"
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            pattern="[0-9]{15}"
+            maxLength={15}
+            placeholder="15 cyfr"
+            title="Numer mikroczipa musi składać się dokładnie z 15 cyfr."
+            value={microchipNumber}
+            onChange={(e) => setMicrochipNumber(e.target.value.replace(/\D/g, "").slice(0, 15))}
           />
         </div>
 

@@ -196,6 +196,23 @@
   font-weight: 600;
 }
 
+.signup-main-link {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  text-align: center;
+}
+
+.signup-main-link a {
+  color: var(--brand);
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+
+.signup-main-link a:hover {
+  opacity: 0.75;
+}
+
 .signup-consent {
   width: 100%;
   color: #8d8387;
@@ -219,7 +236,7 @@
   z-index: 1;
   width: 100%;
   max-width: 400px;
-  margin-top: 24px;
+  margin-top: 10px;
   padding: 0;
   background: transparent;
   color: #9a8f93;

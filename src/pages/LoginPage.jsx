@@ -93,6 +93,10 @@ export default function LoginPage() {
           </p>
         </form>
 
+        <p className="signup-main-link">
+          <Link to="/main">Poznaj Pet Companion →</Link>
+        </p>
+
         <p className="signup-consent">
           Tworząc konto akceptujesz{" "}
           <a href="#regulamin">Regulamin</a> i{" "}

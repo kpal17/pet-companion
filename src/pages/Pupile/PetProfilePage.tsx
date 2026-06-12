@@ -68,6 +68,7 @@ export default function PetProfilePage() {
     { label: "Rasa", value: pet.breed || "—" },
     { label: "Waga", value: pet.weight ? `${pet.weight} kg` : "—" },
     { label: "Wiek", value: computeAge(pet.birthDate) },
+    { label: "Numer mikroczipa", value: pet.microchipNumber || "—" },
   ];
 
   return (

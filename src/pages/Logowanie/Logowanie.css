@@ -367,6 +367,13 @@
   opacity: 0.75;
 }
 
+.login-card-register {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
 .login-footer-consent {
   max-width: 360px;
   font-size: 11px;

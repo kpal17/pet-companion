@@ -21,6 +21,7 @@ export type Pet = {
   breed: string;
   birthDate: string;
   weight: string;
+  microchipNumber?: string;
   photo?: string;
 };
 

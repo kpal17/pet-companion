@@ -175,17 +175,18 @@ export default function Logowanie() {
               </div>
               <i>›</i>
             </Link>
+
+            <p className="login-card-register">
+              Nie masz konta?{" "}
+              <Link to="/rejestracja" className="login-footer-link">
+                Zarejestruj się
+              </Link>
+            </p>
           </form>
         </div>
 
         {/* Footer */}
         <div className="login-footer">
-          <p className="login-footer-reg">
-            Nie masz konta?{" "}
-            <Link to="/rejestracja" className="login-footer-link">
-              Zarejestruj się
-            </Link>
-          </p>
           <p className="login-footer-reg">
             <Link to="/main" className="login-footer-link">
               Poznaj Pet Companion →

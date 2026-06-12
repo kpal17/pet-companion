@@ -229,9 +229,15 @@ function QuickAction({
   description: string;
   onClick: () => void;
 }) {
+  const viewBox = icon === "addIcon"
+    ? "0 0 14 14"
+    : icon === "noteIcon"
+      ? "0 0 16 20"
+      : undefined;
+
   return (
     <button type="button" onClick={onClick}>
-      <i><Icon name={icon} size={21} color="#d92c83" /></i>
+      <i><Icon name={icon} size={21} color="#d92c83" viewBox={viewBox} /></i>
       <strong>{title}</strong>
       <small>{description}</small>
     </button>

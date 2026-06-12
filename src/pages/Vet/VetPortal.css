@@ -234,6 +234,17 @@
   font-size: 12px;
 }
 
+.vet-main-link {
+  color: #795465;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.vet-main-link:hover {
+  color: #d92c83;
+}
+
 .vet-form-error,
 .vet-code-message {
   color: #b82d62;

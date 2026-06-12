@@ -212,6 +212,7 @@ export function VetRegisterPage() {
             Masz profil? <Link to="/vet/logowanie">Zaloguj się</Link>
           </p>
         </form>
+        <Link className="vet-main-link" to="/main">Poznaj Pet Companion →</Link>
         <p className="vet-auth-consent">
           Tworząc konto akceptujesz <a href="#terms">Regulamin</a> i{" "}
           <a href="#privacy">Politykę prywatności</a>
@@ -284,6 +285,7 @@ export function VetLoginPage() {
           </p>
           <Link className="vet-owner-return" to="/logowanie">Wróć do panelu opiekuna</Link>
         </form>
+        <Link className="vet-main-link" to="/main">Poznaj Pet Companion →</Link>
         <p className="vet-auth-consent">
           Logując się akceptujesz <a href="#terms">Regulamin</a> i{" "}
           <a href="#privacy">Politykę prywatności</a>
