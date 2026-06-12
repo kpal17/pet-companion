@@ -174,5 +174,8 @@ Kolejnym etapem rozwoju może być zapis danych w Cloud Firestore, trwałe
 przechowywanie zdjęć oraz podłączenie rzeczywistych powiadomień.
 
 ## Autor
+Projekt rozwijany w ramach pracy nad aplikacją Pet Companion.
 
-Projekt: [kpal17](https://github.com/kpal17)
+[Kamil Pałubiak](https://github.com/kpal17)
+[Bartosz Mordarski](https://github.com/BartoszMordarski)
+[Rafał Palinceusz](https://github.com/RafalPalinceusz)
