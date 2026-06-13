@@ -173,9 +173,25 @@ przechowywane w stanie React. Pełne odświeżenie aplikacji zeruje te dane.
 Kolejnym etapem rozwoju może być zapis danych w Cloud Firestore, trwałe
 przechowywanie zdjęć oraz podłączenie rzeczywistych powiadomień.
 
+# Metryki w narzędziach Google Analytics, Hotjar oraz Firebase
+
+## Lista zarejestrowanych użytkowników
+
+<img width="971" height="720" alt="image" src="https://github.com/user-attachments/assets/c7742677-363c-4d5c-9332-1da05a022b99" />
+
+## Metryki w Google Analytics
+
+<img width="1643" height="892" alt="image" src="https://github.com/user-attachments/assets/f11dcad6-47e4-4be4-95d3-c8bcefd69513" />
+
+## Metryki w Hotjar
+
+<img width="1594" height="882" alt="image" src="https://github.com/user-attachments/assets/27709468-85a6-43ff-bed3-4dff16967897" />
+
 ## Autor
 Projekt rozwijany w ramach pracy nad aplikacją Pet Companion.
 
 [Kamil Pałubiak](https://github.com/kpal17)
 [Bartosz Mordarski](https://github.com/BartoszMordarski)
 [Rafał Palinceusz](https://github.com/RafalPalinceusz)
+
+
